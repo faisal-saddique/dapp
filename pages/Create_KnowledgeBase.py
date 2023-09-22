@@ -22,7 +22,7 @@ st.set_page_config(
     initial_sidebar_state='expanded'
 )
 
-# sidebar()
+sidebar()
 
 # Load environment variables from .env file
 load_dotenv()
