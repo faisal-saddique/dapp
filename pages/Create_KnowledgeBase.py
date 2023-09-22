@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from utilities.sidebar import sidebar
 
 st.set_page_config(
-    page_title='Create KnowledgeBase',
+    page_title='Populate Pinecone',
     page_icon='🤖',
     layout='wide',
     initial_sidebar_state='expanded'
@@ -27,14 +27,14 @@ st.set_page_config(
 # Load environment variables from .env file
 load_dotenv()
 
-st.title("Create New KnowledgeBase")
+st.title("Populate Pinecone Index")
 
 accepted_file_types = ["pdf", "csv", "docx", "xlsx", "json", "txt"]
 
 uploaded_files = st.file_uploader("Upload one or more files", accept_multiple_files=True, type=accepted_file_types)
 
 try:
-    if st.button("Create Knowledgebase", use_container_width=True):
+    if st.button("Begin", use_container_width=True):
         if uploaded_files:
             docs = None
             tot_len = 0
@@ -95,7 +95,7 @@ try:
             st.write(f"Number of tokens: \n{no_of_tokens}")
 
             if no_of_tokens:
-                with st.spinner("Creating Knowledgebase..."):
+                with st.spinner("Populating Pinecone..."):
                     st.session_state.Knowledgebase = add_vectors_to_pinecone(chunked_docs=chunked_docs)
                     st.success("Done! Please headover to chatbot to start interacting with your data.")
                     st.session_state["start_fresh"] = False

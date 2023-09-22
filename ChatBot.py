@@ -19,13 +19,13 @@ from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 
 st.set_page_config(
-    page_title='Ask Docs AI',
+    page_title='Directions Bot',
     page_icon='🤖',
     layout='wide',
     initial_sidebar_state='expanded'
 )
 
-st.title("Ask Docs AI 🤖")
+st.title("Directions Bot 🤖")
 
 # Load environment variables from .env file
 load_dotenv()
