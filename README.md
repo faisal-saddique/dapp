@@ -1,6 +1,4 @@
-Certainly, I can help you create a professional README.md file for your project "The Directions Bot." Here's a template you can use as a starting point:
 
-```markdown
 # The Directions Bot
 
 ![Bot Icon](https://e7.pngegg.com/pngimages/139/563/png-clipart-virtual-assistant-computer-icons-business-assistant-face-service-thumbnail.png)
@@ -90,6 +88,3 @@ We welcome contributions from the community. If you'd like to contribute to this
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
-
-Feel free to customize this template to include specific details about your project, its dependencies, and any additional information you want to provide to users and contributors. Don't forget to update the links and sections as needed.
