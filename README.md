@@ -50,7 +50,7 @@ To expand the knowledgebase and improve the capabilities of the Directions Bot, 
 
 1. **Prepare Your Documents**: Ensure that the documents you want to add to the index are in a compatible format, such as PDF, CSV, DOCX, XLSX, JSON, or TXT.
 
-2. **Access the Pinecone Index Page**: Open the Pinecone Index page in the Directions Bot application. You can access it through the following URL when the bot is running: [http://localhost:8501/pinecone](http://localhost:8501/Populate_Pinecone_Index)
+2. **Access the Pinecone Index Page**: Open the Pinecone Index page in the Directions Bot application. You can access it through the following URL when the bot is running: [http://localhost:8501/pinecone](http://localhost:8501/Populate_Pinecone_Index) 
 
 3. **Upload Documents**: On the Pinecone Index page, you'll find an option to upload one or more documents. Click the "Upload" button.
 
