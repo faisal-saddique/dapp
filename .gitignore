@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+faiss_index_ddw
 data
 
 # C extensions
