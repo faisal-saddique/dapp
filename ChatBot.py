@@ -13,7 +13,7 @@ from utilities.utils import load_existing_index_pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
-
+from langchain.retrievers.multi_query import MultiQueryRetriever
 from langchain.chains import RetrievalQA
 
 from langchain.prompts import PromptTemplate
@@ -64,7 +64,12 @@ class CustomDataChatbot:
 
         vectorstore = st.session_state.Knowledgebase
 
-        return RetrievalQA.from_chain_type(llm=ChatOpenAI(streaming=True), chain_type="stuff", retriever=vectorstore.as_retriever(search_type="mmr", search_kwargs={"k": 10, "fetch_k": 10}), return_source_documents=True,chain_type_kwargs=chain_type_kwargs)
+        llm = ChatOpenAI(temperature=0)
+        retriever_from_llm = MultiQueryRetriever.from_llm(
+            retriever=vectorstore.as_retriever(), llm=llm
+        )
+
+        return RetrievalQA.from_chain_type(llm=ChatOpenAI(streaming=True), chain_type="stuff", retriever=retriever_from_llm, return_source_documents=True,chain_type_kwargs=chain_type_kwargs)
         
 
     @utils.enable_chat_history
