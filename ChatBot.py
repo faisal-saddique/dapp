@@ -64,7 +64,7 @@ class CustomDataChatbot:
 
         vectorstore = st.session_state.Knowledgebase
 
-        return RetrievalQA.from_chain_type(llm=ChatOpenAI(streaming=True), chain_type="stuff", retriever=vectorstore.as_retriever(search_kwargs={"k": 12}), return_source_documents=True,chain_type_kwargs=chain_type_kwargs)
+        return RetrievalQA.from_chain_type(llm=ChatOpenAI(streaming=True), chain_type="stuff", retriever=vectorstore.as_retriever(search_type="mmr", search_kwargs={"k": 10, "fetch_k": 10}), return_source_documents=True,chain_type_kwargs=chain_type_kwargs)
         
 
     @utils.enable_chat_history
