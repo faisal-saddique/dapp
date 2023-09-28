@@ -6,17 +6,26 @@ from langchain.embeddings import OpenAIEmbeddings
 import streamlit as st
 from utilities.sidebar import sidebar
 from streaming import StreamHandler
-import uuid
 from utilities.utils import load_existing_index_pinecone
 
 # Import required libraries for different functionalities
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
+from langchain.retrievers import PineconeHybridSearchRetriever
+from pinecone_text.sparse import BM25Encoder
 from langchain.retrievers.multi_query import MultiQueryRetriever
 from langchain.chains import RetrievalQA
 
 from langchain.prompts import PromptTemplate
+
+# Load environment variables from .env file
+load_dotenv()
+
+import pinecone
+
+pinecone.init(api_key=os.getenv("PINECONE_API_KEY"),
+              environment=os.getenv("PINECONE_ENVIRONMENT"))
 
 st.set_page_config(
     page_title='Directions Bot',
@@ -27,8 +36,7 @@ st.set_page_config(
 
 st.title("Directions Bot 🤖")
 
-# Load environment variables from .env file
-load_dotenv()
+
 
 if "session_chat_history" not in st.session_state:
     st.session_state.session_chat_history = []
@@ -62,11 +70,20 @@ class CustomDataChatbot:
 
         chain_type_kwargs = {"prompt": PROMPT}
 
-        vectorstore = st.session_state.Knowledgebase
+        # vectorstore = st.session_state.Knowledgebase
+        
+        # load to your BM25Encoder object
+        bm25_encoder = BM25Encoder().load("bm25_values_for_ddw.json")
+
+        index = pinecone.Index(os.getenv("PINECONE_INDEX"))
+
+        retriever = PineconeHybridSearchRetriever(
+            embeddings=embeddings, sparse_encoder=bm25_encoder, index=index
+        )
 
         llm = ChatOpenAI(temperature=0)
         retriever_from_llm = MultiQueryRetriever.from_llm(
-            retriever=vectorstore.as_retriever(), llm=llm
+            retriever=retriever, llm=llm
         )
 
         return RetrievalQA.from_chain_type(llm=ChatOpenAI(streaming=True), chain_type="stuff", retriever=retriever_from_llm, return_source_documents=True,chain_type_kwargs=chain_type_kwargs)
