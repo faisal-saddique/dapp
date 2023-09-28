@@ -94,7 +94,7 @@ class CustomDataChatbot:
         index = pinecone.Index(os.getenv("PINECONE_INDEX"))
 
         retriever = PineconeHybridSearchRetriever(
-            embeddings=embeddings, sparse_encoder=bm25_encoder, index=index
+            embeddings=embeddings, sparse_encoder=bm25_encoder, index=index, top_k = 2
         )
 
         llm = ChatOpenAI(temperature=0)
@@ -102,14 +102,14 @@ class CustomDataChatbot:
             retriever=retriever, llm=llm
         )
 
-        from langchain.retrievers import ContextualCompressionRetriever
-        from langchain.retrievers.document_compressors import LLMChainExtractor
+        # from langchain.retrievers import ContextualCompressionRetriever
+        # from langchain.retrievers.document_compressors import LLMChainExtractor
 
-        llm = ChatOpenAI(temperature=0)
-        compressor = LLMChainExtractor.from_llm(llm)
-        compression_retriever = ContextualCompressionRetriever(base_compressor=compressor, base_retriever=retriever_from_llm)
+        # llm = ChatOpenAI(temperature=0)
+        # compressor = LLMChainExtractor.from_llm(llm)
+        # compression_retriever = ContextualCompressionRetriever(base_compressor=compressor, base_retriever=retriever_from_llm)
 
-        return RetrievalQA.from_chain_type(llm=ChatOpenAI(streaming=True), chain_type="stuff", retriever=compression_retriever, return_source_documents=True,chain_type_kwargs=chain_type_kwargs)
+        return RetrievalQA.from_chain_type(llm=ChatOpenAI(streaming=True), chain_type="stuff", retriever=retriever_from_llm, return_source_documents=True,chain_type_kwargs=chain_type_kwargs)
         
 
     @utils.enable_chat_history
