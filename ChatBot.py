@@ -8,6 +8,8 @@ from utilities.sidebar import sidebar
 from streaming import StreamHandler
 from utilities.utils import load_existing_index_pinecone
 
+from langchain.callbacks.base import BaseCallbackHandler
+
 # Import required libraries for different functionalities
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.llms import OpenAI
@@ -46,6 +48,21 @@ if "Knowledgebase" not in st.session_state:
 
 embeddings = OpenAIEmbeddings()
 
+class PrintRetrievalHandler(BaseCallbackHandler):
+    def __init__(self, container):
+        self.status = container.status("**Context Retrieval**")
+
+    def on_retriever_start(self, serialized: dict, query: str, **kwargs):
+        self.status.write(f"**Question:** {query}")
+        self.status.update(label=f"**Context Retrieval:** {query}")
+
+    def on_retriever_end(self, documents, **kwargs):
+        for idx, doc in enumerate(documents):
+            # source = os.path.basename(doc.metadata["path"])
+            self.status.write(f"**Document: {idx}**")
+            self.status.markdown(doc.page_content)
+        self.status.update(state="complete")
+
 class CustomDataChatbot:
 
     def __init__(self):
@@ -74,7 +91,6 @@ class CustomDataChatbot:
         
         # load to your BM25Encoder object
         bm25_encoder = BM25Encoder().load("bm25_values_for_ddw.json")
-
         index = pinecone.Index(os.getenv("PINECONE_INDEX"))
 
         retriever = PineconeHybridSearchRetriever(
@@ -86,7 +102,14 @@ class CustomDataChatbot:
             retriever=retriever, llm=llm
         )
 
-        return RetrievalQA.from_chain_type(llm=ChatOpenAI(streaming=True), chain_type="stuff", retriever=retriever_from_llm, return_source_documents=True,chain_type_kwargs=chain_type_kwargs)
+        from langchain.retrievers import ContextualCompressionRetriever
+        from langchain.retrievers.document_compressors import LLMChainExtractor
+
+        llm = ChatOpenAI(temperature=0)
+        compressor = LLMChainExtractor.from_llm(llm)
+        compression_retriever = ContextualCompressionRetriever(base_compressor=compressor, base_retriever=retriever_from_llm)
+
+        return RetrievalQA.from_chain_type(llm=ChatOpenAI(streaming=True), chain_type="stuff", retriever=compression_retriever, return_source_documents=True,chain_type_kwargs=chain_type_kwargs)
         
 
     @utils.enable_chat_history
@@ -99,9 +122,10 @@ class CustomDataChatbot:
             utils.display_msg(user_query, 'user')
 
             with st.chat_message("assistant", avatar="https://e7.pngegg.com/pngimages/139/563/png-clipart-virtual-assistant-computer-icons-business-assistant-face-service-thumbnail.png"):
+                retrieval_handler = PrintRetrievalHandler(st.container())
                 st_callback = StreamHandler(st.empty())
                 qa = self.create_qa_chain()
-                result = qa({"query": user_query}, callbacks=[st_callback])
+                result = qa({"query": user_query}, callbacks=[retrieval_handler,st_callback])
                 with st.expander("See sources"):
                     for doc in result['source_documents']:
                         st.success(f"Filename: {doc.metadata['source']}")
