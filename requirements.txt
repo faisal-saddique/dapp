@@ -9,3 +9,4 @@ docx2txt
 pinecone-text
 tabulate
 html2text
+faiss-cpu
