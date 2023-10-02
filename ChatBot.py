@@ -109,7 +109,7 @@ class CustomDataChatbot:
         # compressor = LLMChainExtractor.from_llm(llm)
         # compression_retriever = ContextualCompressionRetriever(base_compressor=compressor, base_retriever=retriever_from_llm)
 
-        return RetrievalQA.from_chain_type(llm=ChatOpenAI(streaming=True,model_name="gpt-4-0613"), chain_type="stuff", retriever=retriever_from_llm, return_source_documents=True,chain_type_kwargs=chain_type_kwargs)
+        return RetrievalQA.from_chain_type(llm=ChatOpenAI(streaming=True,model_name="gpt-3.5-turbo-16k"), chain_type="stuff", retriever=retriever_from_llm, return_source_documents=True,chain_type_kwargs=chain_type_kwargs)
         
 
     @utils.enable_chat_history
