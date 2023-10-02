@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import SystemMessage, AIMessage, HumanMessage
 from langchain.prompts import MessagesPlaceholder
-from langchain import Client
+from langsmith import Client
 
 load_dotenv()
 
