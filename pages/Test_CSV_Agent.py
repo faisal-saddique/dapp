@@ -34,7 +34,7 @@ def get_answer_csv(file: TextIO, query: str) -> str:
     #df = pd.read_csv("titanic.csv")
 
     # Create an agent using OpenAI and the Pandas dataframe
-    agent = create_csv_agent(ChatOpenAI(temperature=0), temp_file_path, verbose=True,agent_type=AgentType.OPENAI_FUNCTIONS)
+    agent = create_csv_agent(ChatOpenAI(temperature=0,model_name="gpt-3.5-turbo-16k",), temp_file_path, verbose=True,agent_type=AgentType.OPENAI_FUNCTIONS)
     #agent = create_pandas_dataframe_agent(OpenAI(temperature=0), df, verbose=False)
 
     st_callback = StreamlitCallbackHandler(st.container())
