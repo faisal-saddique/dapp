@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import SystemMessage, AIMessage, HumanMessage
 from langchain.prompts import MessagesPlaceholder
-from langsmith import Client
+from langchain import Client
 
 load_dotenv()
 
@@ -34,7 +34,7 @@ st.set_page_config(
 
 @st.cache_resource(ttl="1h")
 def configure_retriever():
-    loader = RecursiveUrlLoader("https://docs.smith.langchain.com/")
+    loader = RecursiveUrlLoader("https://python.langchain.com/docs/get_started/introduction")
     raw_documents = loader.load()
     docs = Html2TextTransformer().transform_documents(raw_documents)
     text_splitter = RecursiveCharacterTextSplitter(
@@ -49,15 +49,18 @@ def configure_retriever():
 
 tool = create_retriever_tool(
     configure_retriever(),
-    "search_langsmith_docs",
-    "Searches and returns documents regarding LangSmith. LangSmith is a platform for debugging, testing, evaluating, and monitoring LLM applications. You do not know anything about LangSmith, so if you are ever asked about LangSmith you should use this tool.",
+    "search_langchain_docs",
+    "Searches and returns documents regarding langchain. langchain is a platform for debugging, testing, evaluating, and monitoring LLM applications. You do not know anything about langchain, so if you are ever asked about langchain you should use this tool.",
 )
+
 tools = [tool]
-llm = ChatOpenAI(temperature=0, streaming=True, model="gpt-4")
+
+llm = ChatOpenAI(temperature=0, streaming=True, model="gpt-3.5-turbo-16k")
+
 message = SystemMessage(
     content=(
-        "You are a helpful chatbot who is tasked with answering questions about LangSmith. "
-        "Unless otherwise explicitly stated, it is probably fair to assume that questions are about LangSmith. "
+        "You are a helpful chatbot who is tasked with answering questions about langchain. "
+        "Unless otherwise explicitly stated, it is probably fair to assume that questions are about langchain. "
         "If there is any ambiguity, you probably assume they are about that."
     )
 )
@@ -73,7 +76,7 @@ agent_executor = AgentExecutor(
     return_intermediate_steps=True,
 )
 memory = AgentTokenBufferMemory(llm=llm)
-starter_message = "Ask me anything about LangSmith!"
+starter_message = "Ask me anything about langchain!"
 if "messages" not in st.session_state or st.sidebar.button("Clear message history"):
     st.session_state["messages"] = [AIMessage(content=starter_message)]
 
