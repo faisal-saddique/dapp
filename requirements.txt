@@ -11,3 +11,4 @@ tabulate
 html2text
 faiss-cpu
 bs4
+boto3
