@@ -1,30 +1,24 @@
-import utils
-import openai
-from dotenv import load_dotenv
 import os
-from langchain.embeddings import OpenAIEmbeddings
+import tempfile
 import streamlit as st
-from utilities.sidebar import sidebar
-from streaming import StreamHandler
-from utilities.utils import load_existing_index_pinecone
-
-from langchain.callbacks.base import BaseCallbackHandler
-
-# Import required libraries for different functionalities
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
-from langchain.retrievers import PineconeHybridSearchRetriever
-from pinecone_text.sparse import BM25Encoder
+from langchain.document_loaders import PyPDFLoader
+from langchain.memory import ConversationBufferMemory
+from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
+from langchain.vectorstores import Pinecone
+# For generating embeddings with OpenAI's embedding model
+from langchain.embeddings.openai import OpenAIEmbeddings
+import pinecone
+from langchain.callbacks.base import BaseCallbackHandler
+from langchain.chains import ConversationalRetrievalChain
 from langchain.retrievers.multi_query import MultiQueryRetriever
-from langchain.chains import RetrievalQA
-
-from langchain.prompts import PromptTemplate
+from pinecone_text.sparse import BM25Encoder
+from langchain.retrievers import PineconeHybridSearchRetriever
+from dotenv import load_dotenv  # For loading environment variables from .env file
+import os
 
 # Load environment variables from .env file
 load_dotenv()
-
-import pinecone
 
 pinecone.init(api_key=os.getenv("PINECONE_API_KEY"),
               environment=os.getenv("PINECONE_ENVIRONMENT"))
@@ -39,14 +33,67 @@ st.set_page_config(
 st.title("Directions Bot 🤖")
 
 
+@st.cache_resource(ttl="1h")
+def configure_retriever():
+    import boto3
+    # Initialize the S3 client
+    s3 = boto3.client('s3',
+                    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+                    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
 
-if "session_chat_history" not in st.session_state:
-    st.session_state.session_chat_history = []
+    # Specify your S3 bucket name and the filename you want to retrieve from S3
+    bucket_name = os.getenv("AWS_BUCKET_NAME")
+    file_name = os.getenv("BM25_FILEPATH_S3")
 
-if "Knowledgebase" not in st.session_state:
-    st.session_state["Knowledgebase"] = load_existing_index_pinecone()
+    # Specify the local file path where you want to save the downloaded file
+    local_file_path = os.getenv("BM25_FILEPATH_S3")
 
-embeddings = OpenAIEmbeddings()
+    # Download the file from S3
+    try:
+        s3.download_file(bucket_name, file_name, local_file_path)
+        print(f"File '{file_name}' downloaded from S3 to '{local_file_path}'")
+    except Exception as e:
+        print(f"Error downloading file from S3: {e}")
+    
+    # load to your BM25Encoder object
+    bm25_encoder = BM25Encoder().load(local_file_path)
+    index = pinecone.Index(os.getenv("PINECONE_INDEX"))
+    embeddings = OpenAIEmbeddings()
+    retriever = PineconeHybridSearchRetriever(
+        embeddings=embeddings, sparse_encoder=bm25_encoder, index=index, top_k = 5
+    )
+
+    llm = ChatOpenAI(temperature=0,model_name="gpt-3.5-turbo-16k")
+    retriever_from_llm = MultiQueryRetriever.from_llm(
+        retriever=retriever, llm=llm
+    )
+
+    # from langchain.retrievers import ContextualCompressionRetriever
+    # from langchain.retrievers.document_compressors import LLMChainExtractor
+
+    # llm = ChatOpenAI(temperature=0,model_name="gpt-3.5-turbo-16k")
+    # compressor = LLMChainExtractor.from_llm(llm)
+    # compression_retriever = ContextualCompressionRetriever(base_compressor=compressor, base_retriever=retriever_from_llm)
+
+    return retriever_from_llm
+
+class StreamHandler(BaseCallbackHandler):
+    def __init__(self, container: st.delta_generator.DeltaGenerator, initial_text: str = ""):
+        self.container = container
+        self.text = initial_text
+        self.run_id_ignore_token = None
+
+    def on_llm_start(self, serialized: dict, prompts: list, **kwargs):
+        # Workaround to prevent showing the rephrased question as output
+        if prompts[0].startswith("Human"):
+            self.run_id_ignore_token = kwargs.get("run_id")
+
+    def on_llm_new_token(self, token: str, **kwargs) -> None:
+        if self.run_id_ignore_token == kwargs.get("run_id", False):
+            return
+        self.text += token
+        self.container.markdown(self.text)
+
 
 class PrintRetrievalHandler(BaseCallbackHandler):
     def __init__(self, container):
@@ -63,101 +110,35 @@ class PrintRetrievalHandler(BaseCallbackHandler):
             self.status.markdown(doc.page_content)
         self.status.update(state="complete")
 
-class CustomDataChatbot:
 
-    def __init__(self):
-        if "chat_messages" not in st.session_state:
-            st.session_state.chat_messages = []
-        openai.api_key = os.getenv("OPENAI_API_KEY")
+retriever = configure_retriever()
 
-    def create_qa_chain(self):
+# Setup memory for contextual conversation
+msgs = StreamlitChatMessageHistory()
+memory = ConversationBufferMemory(memory_key="chat_history", chat_memory=msgs, return_messages=True, input_key='question', output_key='answer')
+# memory = ConversationSummaryBufferMemory(llm=llm, input_key='question', output_key='answer')
+# Setup LLM and QA chain
+llm = ChatOpenAI(
+    model_name="gpt-3.5-turbo-16k", temperature=0, streaming=True
+)
 
-        import boto3
-        # Initialize the S3 client
-        s3 = boto3.client('s3',
-                        aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-                        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
+qa_chain = ConversationalRetrievalChain.from_llm(
+    llm, retriever=retriever, memory=memory, verbose=True,return_source_documents=True
+)
 
-        # Specify your S3 bucket name and the filename you want to retrieve from S3
-        bucket_name = os.getenv("AWS_BUCKET_NAME")
-        file_name = os.getenv("BM25_FILEPATH_S3")
+if len(msgs.messages) == 0 or st.sidebar.button("Clear message history"):
+    msgs.clear()
+    msgs.add_ai_message("How can I help you?")
 
-        # Specify the local file path where you want to save the downloaded file
-        local_file_path = os.getenv("BM25_FILEPATH_S3")
+avatars = {"human": "user", "ai": "assistant"}
+for msg in msgs.messages:
+    st.chat_message(avatars[msg.type]).write(msg.content)
 
-        # Download the file from S3
-        try:
-            s3.download_file(bucket_name, file_name, local_file_path)
-            print(f"File '{file_name}' downloaded from S3 to '{local_file_path}'")
-        except Exception as e:
-            print(f"Error downloading file from S3: {e}")
+if user_query := st.chat_input(placeholder="Ask me anything!"):
+    st.chat_message("user").write(user_query)
 
-        prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, politely say that you don't know, don't try to make up an answer. Always end your answer by asking the user if he needs more help.
-
-        ---------------------------
-        {context}
-        ---------------------------
-
-        Question: {question}
-        Friendly Answer:"""
-
-        PROMPT = PromptTemplate(
-            template=prompt_template, input_variables=["context", "question"]
-        )
-
-        chain_type_kwargs = {"prompt": PROMPT}
-        
-        # load to your BM25Encoder object
-        bm25_encoder = BM25Encoder().load(local_file_path)
-        index = pinecone.Index(os.getenv("PINECONE_INDEX"))
-
-        retriever = PineconeHybridSearchRetriever(
-            embeddings=embeddings, sparse_encoder=bm25_encoder, index=index, top_k = 5
-        )
-
-        llm = ChatOpenAI(temperature=0)
-        retriever_from_llm = MultiQueryRetriever.from_llm(
-            retriever=retriever, llm=llm
-        )
-
-        # from langchain.retrievers import ContextualCompressionRetriever
-        # from langchain.retrievers.document_compressors import LLMChainExtractor
-
-        # llm = ChatOpenAI(temperature=0,model_name="gpt-3.5-turbo-16k")
-        # compressor = LLMChainExtractor.from_llm(llm)
-        # compression_retriever = ContextualCompressionRetriever(base_compressor=compressor, base_retriever=retriever_from_llm)
-
-        return RetrievalQA.from_chain_type(llm=ChatOpenAI(streaming=True,model_name="gpt-3.5-turbo-16k"), chain_type="stuff", retriever=retriever_from_llm, return_source_documents=True,chain_type_kwargs=chain_type_kwargs)
-        
-
-    @utils.enable_chat_history
-    def main(self):
-
-        user_query = st.chat_input(placeholder="Ask me anything!")
-
-        if user_query:
-
-            utils.display_msg(user_query, 'user')
-
-            with st.chat_message("assistant", avatar="https://e7.pngegg.com/pngimages/139/563/png-clipart-virtual-assistant-computer-icons-business-assistant-face-service-thumbnail.png"):
-                retrieval_handler = PrintRetrievalHandler(st.container())
-                st_callback = StreamHandler(st.empty())
-                qa=self.create_qa_chain()
-                result = qa({"query": user_query}, callbacks=[retrieval_handler,st_callback])
-                with st.expander("See sources"):
-                    for doc in result['source_documents']:
-                        st.success(f"Filename: {doc.metadata['source']}")
-                        st.info(f"\nPage Content: {doc.page_content}")
-                        st.json(doc.metadata, expanded=False)
-
-                st.session_state.messages.append(
-                    {"role": "assistant", "content": result['result'], "matching_docs": result['source_documents']})
-                
-                st.session_state.session_chat_history.append(
-                    (user_query, result["result"]))
-
-
-if __name__ == "__main__":
-    obj = CustomDataChatbot()
-    obj.main()
-    sidebar()
+    with st.chat_message("assistant"):
+        retrieval_handler = PrintRetrievalHandler(st.container())
+        stream_handler = StreamHandler(st.empty())
+        response = qa_chain(user_query, callbacks=[retrieval_handler, stream_handler])
+        # st.error(response)
