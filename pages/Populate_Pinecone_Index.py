@@ -37,6 +37,7 @@ try:
     if st.button("Begin", use_container_width=True):
         if uploaded_files:
             docs = None
+            csv_docs=None
             tot_len = 0
 
             for file in uploaded_files:
@@ -82,21 +83,26 @@ try:
                         docs = docs + parse_xlsx(file_content,filename=file.name)
                 
                 elif file_extension == 'CSV':
-                    if docs is None:
-                        docs = parse_csv(file_content,filename=file.name)
-                    else:
-                        docs = docs + parse_csv(file_content,filename=file.name)
+                    
+                    csv_docs = parse_csv(file_content,filename=file.name)
                 else:
                     raise ValueError("File type not supported!")
 
-            chunked_docs = refined_docs(docs)
-
+            if docs:
+                chunked_docs = refined_docs(docs)
+                chunked_docs += csv_docs
+            else:
+                if csv_docs:
+                    chunked_docs = csv_docs
+                else:
+                    raise Exception("Nothing to index.")
+                
             no_of_tokens = num_tokens_from_string(chunked_docs)
             st.write(f"Number of tokens: \n{no_of_tokens}")
 
             if no_of_tokens:
                 with st.spinner("Populating Pinecone..."):
-                    st.session_state.Knowledgebase = add_vectors_to_pinecone(chunked_docs=chunked_docs)
+                    add_vectors_to_pinecone(chunked_docs=chunked_docs)
                     st.success("Done! Please headover to chatbot to start interacting with your data.")
                     st.session_state["start_fresh"] = False
             else:

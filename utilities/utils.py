@@ -34,15 +34,53 @@ def load_existing_index_pinecone():
 
 def add_vectors_to_pinecone(chunked_docs):
     """Embeds a list of Documents and adds them to a Pinecone Knowledgebase"""
-    
+    from pinecone_text.sparse import BM25Encoder
+
+    # or from pinecone_text.sparse import SpladeEncoder if you wish to work with SPLADE
+
+    # use default tf-idf values
+    bm25_encoder = BM25Encoder().default()
+
     # Embed the chunks
     embeddings = OpenAIEmbeddings()  # type: ignore
 
-    # docsearch = Pinecone.from_existing_index(index_name=os.getenv("PINECONE_INDEX"), embedding=embeddings)
-    # Knowledgebase = Pinecone.add_documents(chunked_docs,embeddings)
-    Knowledgebase = Pinecone.from_documents(
-        chunked_docs, embeddings, index_name=os.getenv("PINECONE_INDEX"))
-    return Knowledgebase
+    # fit tf-idf values on your corpus
+    bm25_encoder.fit([doc.page_content for doc in chunked_docs])
+
+    # store the values to a json file
+    bm25_encoder.dump(os.getenv("BM25_FILEPATH_S3"))
+
+    import boto3
+
+    # Initialize the S3 client
+    s3 = boto3.client('s3',
+                    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+                    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
+
+    # Specify your S3 bucket name and the filename you want to retrieve from S3
+    bucket_name = os.getenv("AWS_BUCKET_NAME")
+    file_name = os.getenv("BM25_FILEPATH_S3")
+
+    # Specify the local file path of the image you want to upload
+    local_file_path = os.getenv("BM25_FILEPATH_S3")
+
+    # Upload the image to S3
+    s3.upload_file(local_file_path, bucket_name, file_name)
+
+    st.info(f"File uploaded to S3 bucket {bucket_name} with key {file_name}")
+
+    # load to your BM25Encoder object
+    bm25_encoder = BM25Encoder().load(os.getenv("BM25_FILEPATH_S3"))
+
+    from langchain.retrievers import PineconeHybridSearchRetriever
+
+    index = pinecone.Index(os.getenv("PINECONE_INDEX"))
+    
+    retriever = PineconeHybridSearchRetriever(
+        embeddings=embeddings, sparse_encoder=bm25_encoder, index=index
+    )
+
+    retriever.add_texts(texts=[doc.page_content for doc in chunked_docs],metadatas=[doc.metadata for doc in chunked_docs])
 
 def convert_filename_to_key(input_string):
     # Normalize string to decomposed form (separate characters and diacritics)

@@ -72,6 +72,26 @@ class CustomDataChatbot:
 
     def create_qa_chain(self):
 
+        import boto3
+        # Initialize the S3 client
+        s3 = boto3.client('s3',
+                        aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+                        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
+
+        # Specify your S3 bucket name and the filename you want to retrieve from S3
+        bucket_name = os.getenv("AWS_BUCKET_NAME")
+        file_name = os.getenv("BM25_FILEPATH_S3")
+
+        # Specify the local file path where you want to save the downloaded file
+        local_file_path = os.getenv("BM25_FILEPATH_S3")
+
+        # Download the file from S3
+        try:
+            s3.download_file(bucket_name, file_name, local_file_path)
+            print(f"File '{file_name}' downloaded from S3 to '{local_file_path}'")
+        except Exception as e:
+            print(f"Error downloading file from S3: {e}")
+
         prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, politely say that you don't know, don't try to make up an answer. Always end your answer by asking the user if he needs more help.
 
         ---------------------------
@@ -86,11 +106,9 @@ class CustomDataChatbot:
         )
 
         chain_type_kwargs = {"prompt": PROMPT}
-
-        # vectorstore = st.session_state.Knowledgebase
         
         # load to your BM25Encoder object
-        bm25_encoder = BM25Encoder().load("bm25_values_for_ddw.json")
+        bm25_encoder = BM25Encoder().load(local_file_path)
         index = pinecone.Index(os.getenv("PINECONE_INDEX"))
 
         retriever = PineconeHybridSearchRetriever(
