@@ -142,8 +142,9 @@ class CustomDataChatbot:
             with st.chat_message("assistant", avatar="https://e7.pngegg.com/pngimages/139/563/png-clipart-virtual-assistant-computer-icons-business-assistant-face-service-thumbnail.png"):
                 retrieval_handler = PrintRetrievalHandler(st.container())
                 st_callback = StreamHandler(st.empty())
-                qa = self.create_qa_chain()
-                result = qa({"query": user_query}, callbacks=[retrieval_handler,st_callback])
+                if "qa" not in st.session_state:
+                    st.session_state['qa']= self.create_qa_chain()
+                result = st.session_state.qa({"query": user_query}, callbacks=[retrieval_handler,st_callback])
                 with st.expander("See sources"):
                     for doc in result['source_documents']:
                         st.success(f"Filename: {doc.metadata['source']}")
