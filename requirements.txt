@@ -13,3 +13,4 @@ faiss-cpu
 bs4
 boto3
 tabulate
+matplotlib
