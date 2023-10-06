@@ -31,7 +31,6 @@ st.set_page_config(
 
 "# Chat🦜🔗"
 
-
 @st.cache_resource(ttl="1h")
 def configure_retriever():
     loader = RecursiveUrlLoader("https://python.langchain.com/docs/get_started/introduction")

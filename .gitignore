@@ -6,6 +6,9 @@ __pycache__/
 faiss_index_ddw
 data
 
+cache
+Colombia-1-2022.csv
+
 # C extensions
 *.so
 notebook.ipynb
