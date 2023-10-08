@@ -60,14 +60,13 @@ agent = create_csv_agent(
     ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k"),
     ["./new data/DDW_Location_details_with_services_FINAL.csv", "./new data/Participants_FINAL.csv", "./new data/Programme_details_with_Narratives_and_Discipline_FINAL.csv"],
     verbose=True,
-    agent_type=AgentType.OPENAI_FUNCTIONS,
+    agent_type=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
 )
 
 tool_csv_agent = Tool(
     func=agent.run,
     name="answer_everything_and_anything",
     description="useful for when you need to answer any question you are asked for which you don't know which tool you need to use"
-
 )
 
 #  = Tool.from_function(
