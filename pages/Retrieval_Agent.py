@@ -64,8 +64,8 @@ tool_ddw_and_tickets_queries = create_retriever_tool(
 )
 
 class GetAllKnowledgeTool(BaseTool):
-    name="answer_everything_and_anything"
-    description="useful for when you need to answer any question you are asked for which you don't know which tool you need to use"
+    name="answer_for_toilets"
+    description="get answer for the toilets"
 
     def _run(
         self, query: str, run_manager: Optional[CallbackManagerForToolRun] = None
