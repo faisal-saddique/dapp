@@ -35,7 +35,7 @@ load_dotenv()
 client = Client()
 
 st.set_page_config(
-    page_title="ChatLangChain",
+    page_title="ChatDDW",
     page_icon="🦜",
     layout="wide",
     initial_sidebar_state="collapsed",
