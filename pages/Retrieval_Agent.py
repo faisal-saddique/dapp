@@ -63,7 +63,6 @@ tool_ddw_and_tickets_queries = create_retriever_tool(
     "use this tool whenever you need to answer anything about DDW (Dutch Design Week) including sub-topics of queries related to tickets, buying, selling, availing discounts, invoice etc.",
 )
 
-
 class GetAllKnowledgeTool(BaseTool):
     name="answer_everything_and_anything",
     description="useful for when you need to answer any question you are asked for which you don't know which tool you need to use"
@@ -87,20 +86,7 @@ class GetAllKnowledgeTool(BaseTool):
         """Use the tool asynchronously."""
         raise NotImplementedError("custom_search does not support async")
 
-# tool_csv_agent = Tool(
-#     func=agent.run,
-#     name="answer_everything_and_anything",
-#     description="useful for when you need to answer any question you are asked for which you don't know which tool you need to use"
-# )
-
-# #  = Tool.from_function(
-# #         func=agent.run,
-# #         name="answer_everything_and_anything",
-# #         description="useful for when you need to answer any question you are asked for which you don't know which tool you need to use"
-
-# #     ),
-
-tools = [tool_ddw_and_tickets_queries,GetAllKnowledgeTool()]
+tools = [GetAllKnowledgeTool()]
 
 llm = ChatOpenAI(temperature=0, streaming=True, model="gpt-3.5-turbo-16k")
 
