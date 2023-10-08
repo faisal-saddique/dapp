@@ -58,7 +58,7 @@ from langchain.agents import create_csv_agent
 
 agent = create_csv_agent(
     ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k"),
-    ["new data\\DDW_Location_details_with_services_FINAL.csv", "new data\\Participants_FINAL.csv", "new data\\Programme_details_with_Narratives_and_Discipline_FINAL.csv"],
+    ["./new data/DDW_Location_details_with_services_FINAL.csv", "./new data/Participants_FINAL.csv", "./new data/Programme_details_with_Narratives_and_Discipline_FINAL.csv"],
     verbose=True,
     agent_type=AgentType.OPENAI_FUNCTIONS,
 )
