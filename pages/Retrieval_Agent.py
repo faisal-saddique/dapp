@@ -60,7 +60,7 @@ agent = create_csv_agent(
     ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k"),
     ["./new data/DDW_Location_details_with_services_FINAL.csv", "./new data/Participants_FINAL.csv", "./new data/Programme_details_with_Narratives_and_Discipline_FINAL.csv"],
     verbose=True,
-    agent_type=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
+    agent_type=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
 )
 
 tool_csv_agent = Tool(
@@ -83,7 +83,7 @@ llm = ChatOpenAI(temperature=0, streaming=True, model="gpt-3.5-turbo-16k")
 message = SystemMessage(
     content=(
         "You are a helpful chatbot who is tasked with answering questions about Dutch Desing Week (DDW). "
-        "Unless otherwise explicitly stated, it is probably fair to assume that questions are about Dutch Desing Week (DDW). "
+        "Unless otherwise explicitly stated, it is probably fair to assume that questions are about Dutch Design Week (DDW). "
         "If there is any ambiguity, you probably assume they are about that."
     )
 )
