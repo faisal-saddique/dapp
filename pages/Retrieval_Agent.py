@@ -63,12 +63,19 @@ agent = create_csv_agent(
     agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
 )
 
-tool_csv_agent = Tool.from_function(
-        func=agent.run,
-        name="answer_everything_and_anything",
-        description="useful for when you need to answer any question you are asked for which you don't know which tool you need to use"
+tool_csv_agent = Tool(
+    func=agent.run,
+    name="answer_everything_and_anything",
+    description="useful for when you need to answer any question you are asked for which you don't know which tool you need to use"
 
-    ),
+)
+
+#  = Tool.from_function(
+#         func=agent.run,
+#         name="answer_everything_and_anything",
+#         description="useful for when you need to answer any question you are asked for which you don't know which tool you need to use"
+
+#     ),
 
 tools = [tool_ddw_and_tickets_queries,tool_csv_agent]
 
