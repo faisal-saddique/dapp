@@ -95,21 +95,58 @@ def csv_analyzer_app():
         
         user_input = st.text_input("Your query")
         if st.button('Run'):
-            response = csv_agent_func(file_path, user_input)
+            response_main = csv_agent_func(file_path, user_input)
             
             # Extracting code from the response
-            code_to_execute = extract_code_from_response(response)
+            code_to_execute = extract_code_from_response(response_main)
             
             if code_to_execute:
                 try:
+                    print(f"got the code")
                     # Making df available for execution in the context
-                    exec(code_to_execute, globals(), {"df": df, "plt": plt})
+                    from contextlib import redirect_stdout
+                    from io import StringIO
+                    io_buffer = StringIO()
+                    try:
+                        with redirect_stdout(io_buffer):
+                            ret = eval(code_to_execute, globals(), {"df": df, "plt": plt})
+                            if ret is None: 
+                                st.write(io_buffer.getvalue())
+                            else:
+                                st.write(ret)
+                    except Exception:
+                        print("inside exception")
+                        with redirect_stdout(io_buffer):
+                            exec(code_to_execute, globals(), {"df": df, "plt": plt})
+                        print(f"hello {io_buffer.getvalue()}")
+                        st.write(io_buffer.getvalue())
+        
+                    # ans = exec(code_to_execute, globals(), {"df": df, "plt": plt})
+
+                    # from langchain.agents.agent_toolkits import create_python_agent
+                    # from langchain.tools.python.tool import PythonREPLTool
+                    # from langchain.python import PythonREPL
+                    # from langchain.llms.openai import OpenAI
+                    # from langchain.tools.python.tool import PythonAstREPLTool
+                    # from langchain.agents.agent_types import AgentType
+                    # from langchain.chat_models import ChatOpenAI
+
+                    # agent_executor = create_python_agent(
+                    #     llm=ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613"),
+                    #     tool=PythonREPLTool(),
+                    #     verbose=True,
+                    #     agent_type=AgentType.OPENAI_FUNCTIONS,
+                    #     agent_executor_kwargs={"handle_parsing_errors": True,"df": df, "plt": plt},
+                    # )
+
+                    # response = agent_executor.run(response_main)
+                    # st.success(response)
                     fig = plt.gcf()  # Get current figure
                     st.pyplot(fig)  # Display using Streamlit
                 except Exception as e:
                     st.write(f"Error executing code: {e}")
             else:
-                st.write(response)
+                st.write(response_main)
 
     st.divider()
 
