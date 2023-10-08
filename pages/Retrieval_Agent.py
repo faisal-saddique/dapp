@@ -70,7 +70,7 @@ tool_csv_agent = Tool.from_function(
 
     ),
 
-tools = [tool_ddw_and_tickets_queries]
+tools = [tool_ddw_and_tickets_queries,tool_csv_agent]
 
 llm = ChatOpenAI(temperature=0, streaming=True, model="gpt-3.5-turbo-16k")
 
