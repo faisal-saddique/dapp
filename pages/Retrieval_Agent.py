@@ -32,7 +32,7 @@ st.set_page_config(
 
 @st.cache_resource(ttl="1h")
 def configure_retriever():
-    loader = Docx2txtLoader("new data\DDW FAQ.docx")
+    loader = Docx2txtLoader("./new data/DDW FAQ.docx")
     docs = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
