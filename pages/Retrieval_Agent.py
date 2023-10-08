@@ -17,6 +17,19 @@ from langchain.prompts import MessagesPlaceholder
 from langsmith import Client
 from langchain.tools import BaseTool, StructuredTool, Tool, tool
 
+from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
+from langchain.agents.agent_types import AgentType
+
+from langchain.agents import create_csv_agent
+
+from typing import Optional, Type
+
+from langchain.callbacks.manager import (
+    AsyncCallbackManagerForToolRun,
+    CallbackManagerForToolRun,
+)
+
 load_dotenv()
 
 client = Client()
@@ -50,33 +63,44 @@ tool_ddw_and_tickets_queries = create_retriever_tool(
     "use this tool whenever you need to answer anything about DDW (Dutch Design Week) including sub-topics of queries related to tickets, buying, selling, availing discounts, invoice etc.",
 )
 
-from langchain.llms import OpenAI
-from langchain.chat_models import ChatOpenAI
-from langchain.agents.agent_types import AgentType
 
-from langchain.agents import create_csv_agent
-
-agent = create_csv_agent(
-    ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k"),
-    ["./new data/DDW_Location_details_with_services_FINAL.csv", "./new data/Participants_FINAL.csv", "./new data/Programme_details_with_Narratives_and_Discipline_FINAL.csv"],
-    verbose=True,
-    agent_type=AgentType.OPENAI_FUNCTIONS,
-)
-
-tool_csv_agent = Tool(
-    func=agent.run,
+class GetAllKnowledgeTool(BaseTool):
     name="answer_everything_and_anything",
     description="useful for when you need to answer any question you are asked for which you don't know which tool you need to use"
-)
 
-#  = Tool.from_function(
-#         func=agent.run,
-#         name="answer_everything_and_anything",
-#         description="useful for when you need to answer any question you are asked for which you don't know which tool you need to use"
+    def _run(
+        self, query: str, run_manager: Optional[CallbackManagerForToolRun] = None
+    ) -> str:
+        """Use the tool."""
+        agent = create_csv_agent(
+            ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k"),
+            ["./new data/DDW_Location_details_with_services_FINAL.csv", "./new data/Participants_FINAL.csv", "./new data/Programme_details_with_Narratives_and_Discipline_FINAL.csv"],
+            verbose=True,
+            agent_type=AgentType.OPENAI_FUNCTIONS,
+        )
+        ans = agent.run(query)
+        return ans
 
-#     ),
+    async def _arun(
+        self, query: str, run_manager: Optional[AsyncCallbackManagerForToolRun] = None
+    ) -> str:
+        """Use the tool asynchronously."""
+        raise NotImplementedError("custom_search does not support async")
 
-tools = [tool_ddw_and_tickets_queries,tool_csv_agent]
+# tool_csv_agent = Tool(
+#     func=agent.run,
+#     name="answer_everything_and_anything",
+#     description="useful for when you need to answer any question you are asked for which you don't know which tool you need to use"
+# )
+
+# #  = Tool.from_function(
+# #         func=agent.run,
+# #         name="answer_everything_and_anything",
+# #         description="useful for when you need to answer any question you are asked for which you don't know which tool you need to use"
+
+# #     ),
+
+tools = [tool_ddw_and_tickets_queries,GetAllKnowledgeTool()]
 
 llm = ChatOpenAI(temperature=0, streaming=True, model="gpt-3.5-turbo-16k")
 
