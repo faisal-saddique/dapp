@@ -41,7 +41,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-"# Chat🦜🔗"
+"# Chat DDW"
 
 @st.cache_resource(ttl="1h")
 def configure_retriever():
@@ -112,7 +112,7 @@ agent_executor = AgentExecutor(
 )
 
 memory = AgentTokenBufferMemory(llm=llm)
-starter_message = "Ask me anything about langchain!"
+starter_message = "Ask me anything about DDW!"
 if "messages" not in st.session_state or st.sidebar.button("Clear message history"):
     st.session_state["messages"] = [AIMessage(content=starter_message)]
 
