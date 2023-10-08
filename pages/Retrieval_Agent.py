@@ -64,7 +64,7 @@ tool_ddw_and_tickets_queries = create_retriever_tool(
 )
 
 class GetAllKnowledgeTool(BaseTool):
-    name="answer_everything_and_anything",
+    name="answer_everything_and_anything"
     description="useful for when you need to answer any question you are asked for which you don't know which tool you need to use"
 
     def _run(
@@ -86,7 +86,7 @@ class GetAllKnowledgeTool(BaseTool):
         """Use the tool asynchronously."""
         raise NotImplementedError("custom_search does not support async")
 
-tools = [GetAllKnowledgeTool()]
+tools = [tool_ddw_and_tickets_queries,GetAllKnowledgeTool()]
 
 llm = ChatOpenAI(temperature=0, streaming=True, model="gpt-3.5-turbo-16k")
 
