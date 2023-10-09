@@ -33,14 +33,33 @@ def get_answer_csv(file: TextIO, query: str) -> str:
     # df = pd.read_csv(file)
     #df = pd.read_csv("titanic.csv")
 
-    # Create an agent using OpenAI and the Pandas dataframe
-    agent = create_csv_agent(ChatOpenAI(temperature=0,model_name="gpt-3.5-turbo-16k",streaming=True), temp_file_path, verbose=True,agent_type=AgentType.OPENAI_FUNCTIONS)
-    #agent = create_pandas_dataframe_agent(OpenAI(temperature=0), df, verbose=False)
 
-    st_callback = StreamlitCallbackHandler(st.container())
-    # Run the agent on the given query and return the answer
-    #query = "whats the square root of the average age?"
-    answer = agent.run(query,callbacks=[st_callback])
+    import pandas as pd
+    from pandasai import SmartDataframe
+    # from pandasai.callbacks import StdoutCallback
+    # from dotenv import load_dotenv
+    # load_dotenv()
+    import os
+
+    df = pd.read_csv(temp_file_path)
+    # Instantiate a LLM
+    from pandasai.llm import OpenAI
+    from langchain.chat_models import ChatOpenAI
+
+    llm2 = ChatOpenAI()
+    llm = OpenAI(api_token=os.getenv("OPENAI_API_KEY"))
+
+    df = SmartDataframe(df, config={"llm": llm2,"verbose":True})
+    answer = df.chat(query)
+
+    # # Create an agent using OpenAI and the Pandas dataframe
+    # agent = create_csv_agent(ChatOpenAI(temperature=0,model_name="gpt-3.5-turbo-16k",streaming=True), temp_file_path, verbose=True,agent_type=AgentType.OPENAI_FUNCTIONS)
+    # #agent = create_pandas_dataframe_agent(OpenAI(temperature=0), df, verbose=False)
+
+    # st_callback = StreamlitCallbackHandler(st.container())
+    # # Run the agent on the given query and return the answer
+    # #query = "whats the square root of the average age?"
+    # answer = agent.run(query,callbacks=[st_callback])
     return answer
 
 st.header("CSV Agent Example")
