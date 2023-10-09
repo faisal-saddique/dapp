@@ -73,7 +73,7 @@ class GetAnswerForAnythingYouDontKnowAbout(BaseTool):
         self, query: str, run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> str:
         """Use the tool."""
-        agent = create_pandas_dataframe_agent(
+        agent = create_csv_agent(
             ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k"),
             df=pd.read_csv("./new data/DDW_Location_details_with_services_FINAL.csv"),
             # return_intermediate_steps=True,
@@ -90,21 +90,25 @@ class GetAnswerForAnythingYouDontKnowAbout(BaseTool):
         """Use the tool asynchronously."""
         raise NotImplementedError("custom_search does not support async")
 
-# csv_tool = Tool(
-#     name="DDW_location_details_with_services",
-#     description="Use this tool whenever you need to answer anything about Places_Name, Location Photo, Google Maps link, Places_Latitude, Places_Longitude, Places_Address, Places_City, Places_PostalCode, Opening times, Services	Dogs allowed, Fully Wheelchair Accessible, Partially Wheelchair Accessible, Toilets available, Wheelchair Friendly Toilet, Wifi available",
-#     func=create_pandas_dataframe_agent(
-#             ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k"),
-#             df=pd.read_csv("./new data/DDW_Location_details_with_services_FINAL.csv"),
-#             return_intermediate_steps=True,
-#             # ["./new data/DDW_Location_details_with_services_FINAL.csv", "./new data/Participants_FINAL.csv", "./new data/Programme_details_with_Narratives_and_Discipline_FINAL.csv"],
-#             verbose=True,
-#             agent_type=AgentType.OPENAI_FUNCTIONS,
-#         ).run
-# )
-from langchain.tools.python.tool import PythonAstREPLTool
-df=pd.read_csv("./new data/DDW_Location_details_with_services_FINAL.csv")
-tools = [tool_ddw_and_tickets_queries,GetAnswerForAnythingYouDontKnowAbout(),PythonAstREPLTool(locals={"df":df})]
+agent = create_csv_agent(
+    ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k"),
+    "./new data/DDW_Location_details_with_services_FINAL.csv",
+    # return_intermediate_steps=True,
+    # ["./new data/DDW_Location_details_with_services_FINAL.csv", "./new data/Participants_FINAL.csv", "./new data/Programme_details_with_Narratives_and_Discipline_FINAL.csv"],
+    verbose=True,
+    agent_type=AgentType.OPENAI_FUNCTIONS,
+)
+
+    
+csv_tool = Tool(
+    name="DDW_location_details_with_services",
+    description="Use this tool whenever you need to answer anything about Places_Name, Location Photo, Google Maps link, Places_Latitude, Places_Longitude, Places_Address, Places_City, Places_PostalCode, Opening times, Services	Dogs allowed, Fully Wheelchair Accessible, Partially Wheelchair Accessible, Toilets available, Wheelchair Friendly Toilet, Wifi available",
+    func=agent.run
+)
+
+# from langchain.tools.python.tool import PythonAstREPLTool
+# df=pd.read_csv("./new data/DDW_Location_details_with_services_FINAL.csv")
+tools = [tool_ddw_and_tickets_queries,csv_tool]
 
 llm = ChatOpenAI(temperature=0, streaming=True, model="gpt-3.5-turbo-16k")
 
