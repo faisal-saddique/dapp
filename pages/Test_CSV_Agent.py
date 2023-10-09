@@ -10,6 +10,9 @@ from langchain.callbacks import StreamlitCallbackHandler
 from langchain.agents.agent_types import AgentType
 from typing import TextIO
 import tempfile
+from pandasai import SmartDataframe
+from pandasai.llm import OpenAI
+from langchain.chat_models import ChatOpenAI
 
 load_dotenv()
 
@@ -34,23 +37,12 @@ def get_answer_csv(file: TextIO, query: str) -> str:
     #df = pd.read_csv("titanic.csv")
 
 
-    import pandas as pd
-    from pandasai import SmartDataframe
-    # from pandasai.callbacks import StdoutCallback
-    # from dotenv import load_dotenv
-    # load_dotenv()
-    import os
-
     df = pd.read_csv(temp_file_path)
-    # Instantiate a LLM
-    from pandasai.llm import OpenAI
-    from langchain.chat_models import ChatOpenAI
-
     llm2 = ChatOpenAI()
     llm = OpenAI(api_token=os.getenv("OPENAI_API_KEY"))
 
-    df = SmartDataframe(df, config={"llm": llm2,"verbose":True})
-    answer = df.chat(query)
+    sdf = SmartDataframe(df, config={"llm": llm2,"verbose":True})
+    answer = sdf.chat(query)
 
     # # Create an agent using OpenAI and the Pandas dataframe
     # agent = create_csv_agent(ChatOpenAI(temperature=0,model_name="gpt-3.5-turbo-16k",streaming=True), temp_file_path, verbose=True,agent_type=AgentType.OPENAI_FUNCTIONS)
