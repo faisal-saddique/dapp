@@ -41,7 +41,7 @@ def get_answer_csv(file: TextIO, query: str) -> str:
     llm2 = ChatOpenAI()
     llm = OpenAI(api_token=os.getenv("OPENAI_API_KEY"))
 
-    sdf = SmartDataframe(df, config={"llm": llm,"verbose":True})
+    sdf = SmartDataframe(df, config={"llm": llm2,"verbose":True})
     answer = sdf.chat(query)
 
 
