@@ -102,7 +102,9 @@ class GetAnswerForAnythingYouDontKnowAbout(BaseTool):
 #             agent_type=AgentType.OPENAI_FUNCTIONS,
 #         ).run
 # )
-tools = [tool_ddw_and_tickets_queries,GetAnswerForAnythingYouDontKnowAbout()]
+from langchain.tools.python.tool import PythonAstREPLTool
+df=pd.read_csv("./new data/DDW_Location_details_with_services_FINAL.csv")
+tools = [tool_ddw_and_tickets_queries,GetAnswerForAnythingYouDontKnowAbout(),PythonAstREPLTool(locals={"df":df})]
 
 llm = ChatOpenAI(temperature=0, streaming=True, model="gpt-3.5-turbo-16k")
 
