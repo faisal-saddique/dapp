@@ -41,17 +41,10 @@ def get_answer_csv(file: TextIO, query: str) -> str:
     llm2 = ChatOpenAI()
     llm = OpenAI(api_token=os.getenv("OPENAI_API_KEY"))
 
-    sdf = SmartDataframe(df, config={"llm": llm2,"verbose":True})
+    sdf = SmartDataframe(df, config={"llm": llm,"verbose":True})
     answer = sdf.chat(query)
 
-    # # Create an agent using OpenAI and the Pandas dataframe
-    # agent = create_csv_agent(ChatOpenAI(temperature=0,model_name="gpt-3.5-turbo-16k",streaming=True), temp_file_path, verbose=True,agent_type=AgentType.OPENAI_FUNCTIONS)
-    # #agent = create_pandas_dataframe_agent(OpenAI(temperature=0), df, verbose=False)
 
-    # st_callback = StreamlitCallbackHandler(st.container())
-    # # Run the agent on the given query and return the answer
-    # #query = "whats the square root of the average age?"
-    # answer = agent.run(query,callbacks=[st_callback])
     return answer
 
 st.header("CSV Agent Example")
