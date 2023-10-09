@@ -86,7 +86,12 @@ class GetAnswerForAnythingYouDontKnowAbout(BaseTool):
         """Use the tool asynchronously."""
         raise NotImplementedError("custom_search does not support async")
 
-tools = [tool_ddw_and_tickets_queries,GetAnswerForAnythingYouDontKnowAbout()]
+csv_tool = Tool(
+    name="DDW_location_details_with_services",
+    description="Use this tool whenever you need to answer anything about Places_Name, Location Photo, Google Maps link, Places_Latitude, Places_Longitude, Places_Address, Places_City, Places_PostalCode, Opening times, Services	Dogs allowed, Fully Wheelchair Accessible, Partially Wheelchair Accessible, Toilets available, Wheelchair Friendly Toilet, Wifi available",
+    func=GetAnswerForAnythingYouDontKnowAbout().run
+)
+tools = [tool_ddw_and_tickets_queries,csv_tool]
 
 llm = ChatOpenAI(temperature=0, streaming=True, model="gpt-3.5-turbo-16k")
 
