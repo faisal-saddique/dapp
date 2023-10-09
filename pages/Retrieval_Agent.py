@@ -94,7 +94,7 @@ csv_tool = Tool(
             "./new data/DDW_Location_details_with_services_FINAL.csv",
             verbose=True,
             agent_type=AgentType.OPENAI_FUNCTIONS,
-        ).run
+        )
 )
 
 tools = [tool_ddw_and_tickets_queries,csv_tool]
