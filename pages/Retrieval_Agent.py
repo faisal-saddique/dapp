@@ -91,7 +91,7 @@ csv_tool = Tool(
     description="Use this tool whenever you need to answer anything about Places_Name, Location Photo, Google Maps link, Places_Latitude, Places_Longitude, Places_Address, Places_City, Places_PostalCode, Opening times, Services	Dogs allowed, Fully Wheelchair Accessible, Partially Wheelchair Accessible, Toilets available, Wheelchair Friendly Toilet, Wifi available",
     func=create_csv_agent(
             ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k"),
-            ["./new data/DDW_Location_details_with_services_FINAL.csv", "./new data/Participants_FINAL.csv", "./new data/Programme_details_with_Narratives_and_Discipline_FINAL.csv"],
+            ["./new data/DDW_Location_details_with_services_FINAL.csv"],
             verbose=True,
             agent_type=AgentType.OPENAI_FUNCTIONS,
         ).run
