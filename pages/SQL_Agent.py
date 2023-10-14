@@ -13,12 +13,11 @@ from langchain.agents import AgentType
 load_dotenv()
 
 # Update the database URI to point to your enhanced_database.db
-db_uri = "sqlite:///E:/DESKTOP/FreeLanceProjects/mrunaal/enhanced_database.db"
+db_uri = "sqlite:///E:/DESKTOP/FreeLanceProjects/audio8/dapp/database.db"
 db = SQLDatabase.from_uri(db_uri)
 
 
-st.title("Customer Insights App")
-st.write("Welcome to the Customer Insights App. Enter your query below:")
+st.title("DDW Event")
 
 query = st.text_area("Enter your query here:")
 
@@ -31,9 +30,9 @@ db_chain = SQLDatabaseChain.from_llm(chat, db, verbose=True)
 
 tools = [
     Tool(
-        name="customers-DB",
+        name="DDW_event_details",
         func=db_chain.run,
-        description="useful for when you need to answer questions about customers, communication, interactions, life events, marketing campaigns, products, transactions"
+        description="useful for when you need to answer anything about DDW (Dutch Design Week). All the queries related to Places_Name,Location Photo,Google Maps link,Places_Latitude,Places_Longitude,Places_Address,Places_City,Places_PostalCode,Opening times,Services,Dogs allowed,Fully Wheelchair Accessible,Partially Wheelchair Accessible,Toilets available,Wheelchair Friendly Toilet,Wifi available"
     )
 ]
 
