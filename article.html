@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="en" theme-mode="dark"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><script class="w-json-ld" type="application/ld+json" id="w-json-ldwistia_40">{"@context":"http://schema.org/","@id":"https://fast.wistia.net/embed/iframe/lnwb9bhs0q","@type":"VideoObject","duration":"PT5M7S","name":"CSV Assistant LangChain","thumbnailUrl":"https://embed-ssl.wistia.com/deliveries/cbad6cd561e63f1b11f5e090359192385214cf04.jpg?image_crop_resized=960x540","embedUrl":"https://fast.wistia.net/embed/iframe/lnwb9bhs0q","uploadDate":"2023-08-24","description":"a LangChain video","contentUrl":"https://embed-ssl.wistia.com/deliveries/6ae25ab31708adda6323d989e6dedfe9f54bda1d.m3u8","transcript":"Alright. In this video, we're gonna walk through building a CSV Assistant using Langchain and OpenAI. So this is gonna allow you to chat with CSVs and visualize the data using natural language. So here I'll go and upload this Titanic CSV, and then I can go and ask questions about it.\n\nHow many rows are there? For example, And here in the terminal, we can see that we're using Langchain CSV agent, which works by calling the PANDIS dataframe agent under the hood. In turn, it's gonna call the Python agent and execute this LLM generated Python code. So you can see to get the answer here, assist you in DF.\n\nAnd next let's go and visualize our data. So I'll say show me a chart of males versus females.\n\nAnd here we can see we get the distribution. So again, under the hood, we're going in writing Python code here to visualize this. We're extracting the Python, and then we're playing this on the front end.\n\nAlright. Now that we know what we're building, let's jump in the code. So the first step is to PIV install LANG Chain open AI streamlet tabulate and map hot lib. Next, we'll go and import these packages into our CSV agent dot pie.\n\nAnd after that, we'll just go and set open ai key here. So here, you can either store this in your API key dot pie, or you can store this in your repllet secret manager if you're using repllet Another we set our open AI key, let's go and create our first function, which is gonna run the CSV agent with a given file path and the user message. So here we can see this takes in two parameters, the file path for the CSV file and the user message for the query. Next, we're going to initialize our agent with the create CSV agent function.\n\nAnd for our LLM, we're gonna use the chat OpenAI models, which are the GPT three point five turbo and GPT four model. We'll set the temperature to zero, and then we're gonna set our OpenAI key here. Next, we'll point the agent to our file path, and then we'll set verbose to be true so we can check everything out in the terminal. And for the agent type, we're gonna set this to open AI functions, which is going to use the model that's fine tuned for function calling.\n\nSo this is gonna be the o six one three model, which is fine tuned to call So in case you're unfamiliar with OpenAI function calling, it allows you to use this o six one three model, and it's gonna choose which tool to use based on the user's message. After we set the tools that the agent has access to, we're gonna run this agent with those tool inputs and save the response here. Alright. Next step, we're gonna go and create this function that's going to allow us to render the agent's JSON response in streamline.\n\nSo this function is designed to take in a JSON response from our CSV agent and then render the appropriate content using streamlet. So this function takes in a single parameter, which is the JSON response from the agent. Next, we're gonna check if the response has plain text. So if it contains the answer key, this indicates that it's a textual answer. So we can just display this with s t dot right.\n\nAfter that, we'll check if the response has a bar chart. So we'll check if the bar key is in the JSON response. We're then gonna transform this to a panel's data frame and then we're gonna display it using the s t dot bar chart with our data frame. And lastly, we'll just do the same thing and check if the answer has a table key in there, and then we'll just use dot table to display the data frame. And of course, we can extend this function to handle more data visualization types, but for now, this will get us started.\n\nAlright. Next step, let's create a function called extract code from response. So this is gonna extract our Python code from the string response.\n\nSo our agent's response is gonna include both end code, and we just wanna be able to extract the codes that we can use it for a data visualization.\n\nSo you're gonna use a regular expression to match our code with the triple backticks. That just indicates that it's writing in Python. So here, we'll just search for this and get matches. Then if a match is found, we're gonna extract the Python code and we'll just get rid of any leading or trailing white spaces to ensure we can actually execute this code. Last step, let's create our main streamlet application, which is gonna put everything together. So here, we'll just set our title and our description.\n\nAnd then we use the dot file uploader to upload our CSV file and store this in uploaded file. And if the file is successfully uploaded, we're just gonna extract the metadata and display the file tails here. And then we're also gonna save the uploaded file to disc, so we'll save it in a temporary location with this forward slash t m p here. And we're also gonna load this CSV into a panel's data frame so that we can display it using s t dot data frame. And then after the file preview, we'll use this s t dot text input to allow you to input that query.\n\nAnd then if the run button is clicked, we're gonna use our CSV agent function, and we're gonna pass in our file path and the user input.\n\nAfter that, we'll go and use our extract code from response function to go and check if there's any code that we wanna display on the front end. And if there is code to execute, we're gonna go and attempt to run here. So we'll make the data frame and plotting libraries PLT available to the executing code. And then any generated plot that's captured using this p l t dot g c function is gonna be displayed in streamlet using our s t dot high plot method.\n\nAnd down here, if there's no executable code in the response, we're just gonna display it with s t dot right. And that's all we need for our simple app. So let's go and test it out one more time. So let's say visualize the distribution of ages.\n\nAnd here we've got our distribution of ages. So this looks to be working well. And that's up to this video. I just wanna show you how you can use line chain and streamlet to create a simple app that allows you to query CSVs visualize the data using natural language.","potentialAction":{"@type":"SeekToAction","target":"https://www.mlq.ai/csv-assistant-langchain-mlq-academy/?wtime={seek_to_second_number}","startOffset-input":"required name=seek_to_second_number"}}</script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Building a CSV Assistant with LangChain: MLQ Academy</title>
+  <meta name="HandheldFriendly" content="True">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preload" href="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/app.css" as="style">
+  <link rel="preload" href="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/app.min.css" as="style">
+  <link rel="preload" href="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/manifest.js" as="script">
+  <link rel="preload" href="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/vendor.js" as="script">
+  <link rel="preload" href="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/app.js" as="script">
+  <link rel="preload" href="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/app.min.js" as="script">
+
+    <link rel="preload" href="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/post.css" as="style">
+
+
+  <link rel="stylesheet" type="text/css" href="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/app.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/app.min.css" media="screen">
+
+    <script type="text/javascript" async="" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/analytics.js"></script><script type="text/javascript" async="" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/js"></script><script async="" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/uwt.js"></script><script src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/325281691356464.js" async=""></script><script async="" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/fbevents.js"></script><script async="" defer="defer" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/app.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/post.css" media="screen">
+
+
+  <meta name="description" content="In this video tutorial, we'll walk through how to use LangChain and OpenAI to create a CSV assistant that allows you to chat with and visualize data with natural language.">
+    <link rel="icon" href="https://www.mlq.ai/content/images/size/w256h256/2023/01/Q--1-.png" type="image/png">
+    <link rel="canonical" href="https://www.mlq.ai/csv-assistant-langchain-mlq-academy/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <link rel="amphtml" href="https://www.mlq.ai/csv-assistant-langchain-mlq-academy/amp/">
+    
+    <meta property="og:site_name" content="MLQ.ai">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Building a CSV Assistant with LangChain: MLQ Academy">
+    <meta property="og:description" content="In this video tutorial, we'll walk through how to use LangChain and OpenAI to create a CSV assistant that allows you to chat with and visualize data with natural language.">
+    <meta property="og:url" content="https://www.mlq.ai/csv-assistant-langchain-mlq-academy/">
+    <meta property="og:image" content="https://www.mlq.ai/content/images/2023/08/CSV-Assistant-Langchain--1--1.png">
+    <meta property="article:published_time" content="2023-08-24T11:15:13.000Z">
+    <meta property="article:modified_time" content="2023-08-24T11:15:13.000Z">
+    <meta property="article:tag" content="MLQ Academy">
+    <meta property="article:tag" content="LangChain">
+    <meta property="article:tag" content="OpenAI">
+    <meta property="article:tag" content="GPT-3">
+    <meta property="article:tag" content="GPT-4">
+    <meta property="article:tag" content="Large Language Models">
+    <meta property="article:tag" content="Generative AI">
+    <meta property="article:tag" content="Machine Learning">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Building a CSV Assistant with LangChain: MLQ Academy">
+    <meta name="twitter:description" content="In this video tutorial, we'll walk through how to use LangChain and OpenAI to create a CSV assistant that allows you to chat with and visualize data with natural language.">
+    <meta name="twitter:url" content="https://www.mlq.ai/csv-assistant-langchain-mlq-academy/">
+    <meta name="twitter:image" content="https://www.mlq.ai/content/images/2023/08/CSV-Assistant-Langchain--1--1.png">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Peter Foy">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="MLQ Academy, LangChain, OpenAI, GPT-3, GPT-4, Large Language Models, Generative AI, Machine Learning">
+    <meta name="twitter:site" content="@mlqai">
+    <meta property="og:image:width" content="2240">
+    <meta property="og:image:height" content="1260">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "MLQ.ai",
+        "url": "https://www.mlq.ai/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.mlq.ai/content/images/size/w256h256/2023/01/Q--1-.png",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Peter Foy",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.mlq.ai/content/images/2020/11/0.jpg",
+            "width": 200,
+            "height": 200
+        },
+        "url": "https://www.mlq.ai/author/peter/",
+        "sameAs": []
+    },
+    "headline": "Building a CSV Assistant with LangChain: MLQ Academy",
+    "url": "https://www.mlq.ai/csv-assistant-langchain-mlq-academy/",
+    "datePublished": "2023-08-24T11:15:13.000Z",
+    "dateModified": "2023-08-24T11:15:13.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://www.mlq.ai/content/images/2023/08/CSV-Assistant-Langchain--1--1.png",
+        "width": 2240,
+        "height": 1260
+    },
+    "keywords": "MLQ Academy, LangChain, OpenAI, GPT-3, GPT-4, Large Language Models, Generative AI, Machine Learning",
+    "description": "In this video tutorial, we&#x27;ll walk through how to use LangChain and OpenAI to create a CSV assistant that allows you to chat with and visualize data with natural language.",
+    "mainEntityOfPage": "https://www.mlq.ai/csv-assistant-langchain-mlq-academy/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.68">
+    <link rel="alternate" type="application/rss+xml" title="MLQ.ai" href="https://www.mlq.ai/rss/">
+    <script defer="defer" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/portal.min.js" data-i18n="false" data-ghost="https://www.mlq.ai/" data-key="3a2b459173a70a883e59b1188c" data-api="https://mlq.ghost.io/ghost/api/content/" crossorigin="anonymous"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style><script async="" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/Untitled.js"></script>
+    <script defer="defer" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/sodo-search.min.js" data-key="3a2b459173a70a883e59b1188c" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://mlq.ghost.io/" crossorigin="anonymous"></script>
+    
+    <link href="https://www.mlq.ai/webmentions/receive/" rel="webmention">
+    <script defer="defer" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/cards.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/cards.min.css">
+    <script defer="defer" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/member-attribution.min.js"></script>
+    <script defer="defer" data-domain="mlq.ai" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/script.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async="" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/js_002"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-126188257-1');
+</script>
+<!-- Facebook Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '325281691356464');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=325281691356464&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+<script async="" data-uid="332e7340e3" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/index.js"></script>
+
+<meta name="facebook-domain-verification" content="a1bfuggiqymapkj02ia7ztcrsy8hrf">
+
+<!-- Twitter universal website tag code -->
+<script>
+!function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+},s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='//static.ads-twitter.com/uwt.js',
+a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+// Insert Twitter Pixel ID and Standard Event data below
+twq('init','o66qh');
+twq('track','PageView');
+</script>
+<!-- End Twitter universal website tag code -->
+
+<style>
+	@media only screen and (min-width: 48rem) {
+		.f-title {
+			/* Allow longer titles, you can change this value as you prefer */
+			max-width: 720px;
+		}
+
+		.f-memberships-container {
+			justify-content: center;
+		}
+	}
+
+	@media only screen and (min-width: 64rem) {
+		.f-membership {
+			/* (Optional) To make the tier boxes bigger, you can set the width you prefer */
+			width: calc(40% - 2.5rem);
+		}
+	}
+</style>
+<style>
+.subscription-box {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2em;
+    position: relative;
+    border-radius: 5px;
+    background-color: transparent;
+    overflow: hidden;
+  }
+
+  .subscription-box::after {
+    background-color: var(--color-accent);
+    opacity: 0.2;
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+
+  .subscription-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 30rem;
+    --color-danger: #fc365e;
+    --color-success: #48c774;
+  }
+
+  .subscription-form-title {
+    margin-top: 0;
+    font-size: 1.6rem;
+  }
+
+  .subscription-form-description {
+    text-align: left;
+    margin-bottom: 2em;
+    margin-top: 0;
+  }
+
+  .subscription-form input, .subscription-form button {
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: none;
+    border: 1px solid #cecece;
+  }
+
+  .subscription-form input {
+    background-color: transparent;
+  }
+
+  .subscription-form button {
+    text-align: center;
+    text-transform: uppercase;
+    background-color: var(--color-accent);
+    color: #e6e6e6;
+  }
+
+  .subscription-form .success-message, .subscription-form .error-message {
+    display: none;
+  }
+
+  .subscription-form.success .success-message, .subscription-form.error .error-message {
+    display: flex;
+    margin-top: 10px;
+    font-weight: 500;
+  }
+
+  .subscription-form.success .success-message {
+    color: var(--color-success);
+  }
+
+  .subscription-form.error .error-message {
+    color: var(--color-danger);
+  }
+
+  .label-description {
+    font-weight: 500;
+    margin-left: 50px;
+    white-space: nowrap;
+  }
+
+  .subscribe-box {
+    background-color: #fff;
+    display: flex;
+    padding: 0.5em;
+    border-radius: 5px;
+  }
+
+  .subscribe-box input {
+    border: none;
+    box-shadow: none;
+    flex: 2;
+    margin: 0;
+    padding: 0 1em;
+    outline: none;
+    font-size: 15px;
+  }
+
+  .subscribe-box button {
+    flex: 1;
+    font-size: .8rem;
+    padding: 1em;
+    font-weight: 700;
+  }
+
+  .switch {
+    position: relative;
+    display: flex;
+    width: 45px;
+    height: 25px;
+    margin-bottom: 1em;
+    margin-right: 1em;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2.5px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked + .slider {
+    background-color: var(--color-accent);
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+
+  input:checked + .slider:before {
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+  }
+
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+ </style>
+  <style>:root {--ghost-accent-color: #15171A;}</style>
+
+  <style>
+    :root {
+      --accent-color: var(--ghost-accent-color);
+    }
+  </style>
+    <style>
+      [theme-mode="dark"] {
+        --accent-color: #896bff;
+      }
+    </style>
+
+  <style>
+    /* These font-faces are here to make fonts work if the Ghost instance is installed in a subdirectory */
+
+    /* Poppins regular */
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: local('Poppins Regular'), local('Poppins-Regular'),
+      url("https://www.mlq.ai/assets/fonts/poppins/poppins-regular.woff2?v=3477f71234") format('woff2'),
+      url("https://www.mlq.ai/assets/fonts/poppins/poppins-regular.woff?v=3477f71234") format('woff');
+    }
+
+    /* Poppins italic */
+    @font-face {
+      font-family: 'Poppins';
+      font-style: italic;
+      font-weight: 400;
+      font-display: swap;
+      src: local('Poppins Italic'), local('Poppins-Italic'),
+      url("https://www.mlq.ai/assets/fonts/poppins/poppins-italic.woff2?v=3477f71234") format('woff2'),
+      url("https://www.mlq.ai/assets/fonts/poppins/poppins-italic.woff?v=3477f71234") format('woff');
+    }
+
+    /* Poppins 500 */
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: local('Poppins Medium'), local('Poppins-Medium'),
+      url("https://www.mlq.ai/assets/fonts/poppins/poppins-500.woff2?v=3477f71234") format('woff2'),
+      url("https://www.mlq.ai/assets/fonts/poppins/poppins-500.woff?v=3477f71234") format('woff');
+    }
+
+    /* Poppins 600 */
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: local('Poppins SemiBold'), local('Poppins-SemiBold'),
+      url("https://www.mlq.ai/assets/fonts/poppins/poppins-600.woff2?v=3477f71234") format('woff2'),
+      url("https://www.mlq.ai/assets/fonts/poppins/poppins-600.woff?v=3477f71234") format('woff');
+    }
+
+    /* Firma iconfont */
+    @font-face {
+      font-family: 'firma';
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+      src: url("https://www.mlq.ai/assets/fonts/firma/firma.eot?v=3477f71234");
+      src: url("https://www.mlq.ai/assets/fonts/firma/firma.eot?v=3477f71234") format('embedded-opentype'), url("https://www.mlq.ai/assets/fonts/firma/firma.woff2?v=3477f71234") format('woff2'),
+      url("https://www.mlq.ai/assets/fonts/firma/firma.woff?v=3477f71234") format('woff'),
+      url("https://www.mlq.ai/assets/fonts/firma/firma.ttf?v=3477f71234") format('truetype'),
+      url("https://www.mlq.ai/assets/fonts/firma/firma.svg?v=3477f71234") format('svg');
+    }
+  </style>
+
+
+    <script>
+      if (typeof Storage !== 'undefined') {
+        const savedThemeMode = localStorage.getItem('firma-theme-mode');
+        const html = document.querySelector('html');
+
+        if (savedThemeMode && savedThemeMode !== 'system') {
+          html.setAttribute('theme-mode', savedThemeMode);
+        } else {
+          const isSystemDark = window.matchMedia
+            && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const themeMode = isSystemDark ? 'dark' : 'light';
+
+          html.setAttribute('theme-mode', themeMode);
+        }
+      }
+    </script>
+<style>.gh-portal-account-header{display:flex;flex-direction:column;align-items:center;margin:0 0 32px}.gh-portal-account-header .gh-portal-avatar{margin:6px 0 8px!important}.gh-portal-account-data{margin-bottom:40px}footer.gh-portal-account-footer{display:flex}.gh-portal-account-footer.paid{margin-top:12px}.gh-portal-account-footermenu{display:flex;align-items:center;list-style:none;padding:0;margin:0}.gh-portal-account-footerright{display:flex;flex-grow:1;align-items:center;justify-content:flex-end}.gh-portal-account-footermenu li{margin-right:16px}.gh-portal-account-footermenu li:last-of-type{margin-right:0}.gh-portal-freeaccount-newsletter{display:flex;align-items:center;justify-content:space-between;margin-top:24px}.gh-portal-freeaccount-newsletter .label{display:flex;flex-direction:column;flex-grow:1}.gh-portal-free-ctatext{margin-top:-12px}.gh-portal-cancelcontinue-container{margin:24px 0 32px}.gh-portal-list-detail .gh-portal-email-notice{display:flex;align-items:center;gap:5px;margin-top:6px;color:var(--red);font-weight:500;font-size:1.25rem;letter-spacing:.2px}.gh-portal-email-notice-icon{width:20px;height:20px}.gh-portal-billing-button-loader{width:32px;height:32px;margin-right:-3px;opacity:.6}.gh-portal-product-icon{width:52px;margin-right:12px;border-radius:2px}.gh-portal-account-discountcontainer{position:relative;display:flex;align-items:center}.gh-portal-account-old-price{text-decoration:line-through;color:var(--grey9)!important}.gh-portal-account-tagicon{width:16px;height:16px;color:var(--brandcolor);margin-right:5px;z-index:999}@media (max-width: 390px){.gh-portal-account-footer{padding:0!important}}@media (max-width: 340px){.gh-portal-account-footer{padding:0!important;flex-wrap:wrap;gap:12px}.gh-portal-account-footer .gh-portal-account-footerright{justify-content:flex-start}}.gh-email-suppressed-page-title{margin-bottom:14px}.gh-email-suppressed-page-icon{display:block;width:38px;height:38px;margin:0 auto 18px}.gh-email-suppressed-page-text{padding:0 14px;text-align:center;color:var(--grey6)}.gh-email-faq-footer-text{color:var(--grey8)}.gh-portal-list-detail.email-newsletter .gh-email-faq-page-button{display:block;margin-top:3px}.accountEmail .gh-email-faq-page-button{margin-left:4px}.emailReceivingFAQ .gh-portal-btn-back,.emailReceivingFAQ .gh-portal-btn-back:hover{left:calc(6vmin - 14px)}.emailReceivingFAQ .gh-portal-closeicon-container{right:calc(6vmin - 20px)}@media (max-width: 480px){.emailReceivingFAQ .gh-portal-btn-back,.emailReceivingFAQ .gh-portal-btn-back:hover{left:16px}.emailReceivingFAQ .gh-portal-closeicon-container{right:24px}}.gh-email-faq-page-button{color:var(--brandcolor);cursor:pointer;background:none;transition:color linear .1s;font-size:1.45rem}</style><style>.App{text-align:center}.App-logo{height:40vmin;pointer-events:none}@media (prefers-reduced-motion: no-preference){.App-logo{animation:App-logo-spin infinite 20s linear}}.App-header{background-color:#282c34;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:calc(10px + 2vmin);color:#fff}.App-link{color:#61dafb}@keyframes App-logo-spin{0%{transform:rotate(0)}to{transform:rotate(360deg)}}
+</style><style class="fslightbox-styles">.fslightbox-absoluted{position:absolute;top:0;left:0}.fslightbox-fade-in{animation:fslightbox-fade-in .3s cubic-bezier(0,0,.7,1)}.fslightbox-fade-out{animation:fslightbox-fade-out .3s ease}.fslightbox-fade-in-strong{animation:fslightbox-fade-in-strong .3s cubic-bezier(0,0,.7,1)}.fslightbox-fade-out-strong{animation:fslightbox-fade-out-strong .3s ease}@keyframes fslightbox-fade-in{from{opacity:.65}to{opacity:1}}@keyframes fslightbox-fade-out{from{opacity:.35}to{opacity:0}}@keyframes fslightbox-fade-in-strong{from{opacity:.3}to{opacity:1}}@keyframes fslightbox-fade-out-strong{from{opacity:1}to{opacity:0}}.fslightbox-cursor-grabbing{cursor:grabbing}.fslightbox-full-dimension{width:100%;height:100%}.fslightbox-open{overflow:hidden;height:100%}.fslightbox-flex-centered{display:flex;justify-content:center;align-items:center}.fslightbox-opacity-0{opacity:0!important}.fslightbox-opacity-1{opacity:1!important}.fslightbox-scrollbarfix{padding-right:17px}.fslightbox-transform-transition{transition:transform .3s}.fslightbox-container{font-family:Arial,sans-serif;position:fixed;top:0;left:0;background:linear-gradient(rgba(30,30,30,.9),#000 1810%);touch-action:pinch-zoom;z-index:1000000000;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}.fslightbox-container *{box-sizing:border-box}.fslightbox-svg-path{transition:fill .15s ease;fill:#ddd}.fslightbox-nav{height:45px;width:100%;position:absolute;top:0;left:0}.fslightbox-slide-number-container{display:flex;justify-content:center;align-items:center;position:relative;height:100%;font-size:15px;color:#d7d7d7;z-index:0;max-width:55px;text-align:left}.fslightbox-slide-number-container .fslightbox-flex-centered{height:100%}.fslightbox-slash{display:block;margin:0 5px;width:1px;height:12px;transform:rotate(15deg);background:#fff}.fslightbox-toolbar{position:absolute;z-index:3;right:0;top:0;height:100%;display:flex;background:rgba(35,35,35,.65)}.fslightbox-toolbar-button{height:100%;width:45px;cursor:pointer}.fslightbox-toolbar-button:hover .fslightbox-svg-path{fill:#fff}.fslightbox-slide-btn-container{display:flex;align-items:center;padding:12px 12px 12px 6px;position:absolute;top:50%;cursor:pointer;z-index:3;transform:translateY(-50%)}@media (min-width:476px){.fslightbox-slide-btn-container{padding:22px 22px 22px 6px}}@media (min-width:768px){.fslightbox-slide-btn-container{padding:30px 30px 30px 6px}}.fslightbox-slide-btn-container:hover .fslightbox-svg-path{fill:#f1f1f1}.fslightbox-slide-btn{padding:9px;font-size:26px;background:rgba(35,35,35,.65)}@media (min-width:768px){.fslightbox-slide-btn{padding:10px}}@media (min-width:1600px){.fslightbox-slide-btn{padding:11px}}.fslightbox-slide-btn-container-previous{left:0}@media (max-width:475.99px){.fslightbox-slide-btn-container-previous{padding-left:3px}}.fslightbox-slide-btn-container-next{right:0;padding-left:12px;padding-right:3px}@media (min-width:476px){.fslightbox-slide-btn-container-next{padding-left:22px}}@media (min-width:768px){.fslightbox-slide-btn-container-next{padding-left:30px}}@media (min-width:476px){.fslightbox-slide-btn-container-next{padding-right:6px}}.fslightbox-down-event-detector{position:absolute;z-index:1}.fslightbox-slide-swiping-hoverer{z-index:4}.fslightbox-invalid-file-wrapper{font-size:22px;color:#eaebeb;margin:auto}.fslightbox-video{object-fit:cover}.fslightbox-youtube-iframe{border:0}.fslightboxl{display:block;margin:auto;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:67px;height:67px}.fslightboxl div{box-sizing:border-box;display:block;position:absolute;width:54px;height:54px;margin:6px;border:5px solid;border-color:#999 transparent transparent transparent;border-radius:50%;animation:fslightboxl 1.2s cubic-bezier(.5,0,.5,1) infinite}.fslightboxl div:nth-child(1){animation-delay:-.45s}.fslightboxl div:nth-child(2){animation-delay:-.3s}.fslightboxl div:nth-child(3){animation-delay:-.15s}@keyframes fslightboxl{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.fslightbox-source{position:relative;z-index:2;opacity:0}</style><style id="fit-vids-style">.fluid-width-video-wrapper{width:100%;position:relative;padding:0;}.fluid-width-video-wrapper iframe,.fluid-width-video-wrapper object,.fluid-width-video-wrapper embed {position:absolute;top:0;left:0;width:100%;height:100%;}</style><style id="lightense-images-css">
+:root {
+  --lightense-z-index: 4999;
+  --lightense-backdrop: var(--bg-color-80, rgba(255, 255, 255, .98));
+  --lightense-duration: 300ms;
+  --lightense-timing-func: cubic-bezier(.2, 0, .1, 1);
+}
+
+.lightense-backdrop {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: calc(var(--lightense-z-index) - 1);
+  padding: 0;
+  margin: 0;
+  transition: opacity var(--lightense-duration) ease;
+  cursor: zoom-out;
+  opacity: 0;
+  background-color: var(--lightense-backdrop);
+  visibility: hidden;
+}
+
+@supports (-webkit-backdrop-filter: blur(30px)) {
+  .lightense-backdrop {
+    background-color: var(--lightense-backdrop);
+    -webkit-backdrop-filter: blur(30px);
+  }
+}
+
+@supports (backdrop-filter: blur(30px)) {
+  .lightense-backdrop {
+    background-color: var(--lightense-backdrop);
+    backdrop-filter: blur(30px);
+  }
+}
+
+.lightense-wrap {
+  position: relative;
+  transition: transform var(--lightense-duration) var(--lightense-timing-func);
+  z-index: var(--lightense-z-index);
+  pointer-events: none;
+}
+
+.lightense-target {
+  cursor: zoom-in;
+  transition: transform var(--lightense-duration) var(--lightense-timing-func);
+  pointer-events: auto;
+}
+
+.lightense-open {
+  cursor: zoom-out;
+}
+
+.lightense-transitioning {
+  pointer-events: none;
+}</style><meta http-equiv="origin-trial" content="AymqwRC7u88Y4JPvfIF2F37QKylC04248hLCdJAsh8xgOfe/dVJPV3XS3wLFca1ZMVOtnBfVjaCMTVudWM//5g4AAAB7eyJvcmlnaW4iOiJodHRwczovL3d3dy5nb29nbGV0YWdtYW5hZ2VyLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjk1MTY3OTk5LCJpc1RoaXJkUGFydHkiOnRydWV9"><style id="wistia_127_style" type="text/css" class="wistia_injected_style">
+      #wistia_chrome_23 ::cue {
+        visibility: hidden;
+      }
+      #wistia_chrome_23 ::-webkit-media-text-track-container {
+        visibility: hidden;
+      }
+      #wistia_chrome_23 ::-webkit-media-text-track-background {
+        visibility: hidden;
+      }
+      #wistia_chrome_23 ::-webkit-media-text-track-display {
+        visibility: hidden;
+      }
+    </style></head>
+
+<body class="post-template tag-mlq-academy tag-langchain tag-openai tag-gpt-3 tag-gpt-4 tag-large-language-models tag-generative-ai tag-machine-learning">
+  
+
+
+
+<div class="f-main-container">
+  
+<header class="f-header js-header">
+  
+<div class="f-mobile-top-bar" x-data="mobileMenu()">
+  
+<a href="https://www.mlq.ai/" class="f-logo in-mobile-top-bar  no-logo " title="MLQ.ai">
+    <span>MLQ.ai</span>
+</a>
+  <button class="f-menu-button no-appearance content-centered" aria-label="Open menu" @click.stop="openMenu">
+    <span class="icon-menu" aria-hidden="true"></span>
+  </button>
+  <div class="f-mobile-menu" :class="{ 'opened': isMenuOpen() }" @click.away="closeMenu">
+    <div class="f-mobile-menu__container">
+      <button class="f-mobile-menu__close no-appearance content-centered" aria-label="Close menu" @click="closeMenu">
+        <span class="icon-close" aria-hidden="true"></span>
+      </button>
+      <div class="f-mobile-menu__main">
+          <div class="f-mobile-menu__nav-section">
+            <span class="f-mobile-menu__nav-title">
+              Main links
+            </span>
+            <nav role="navigation" aria-label="Main links">
+              <ul class="f-mobile-menu__navigation-list">
+                
+    <li>
+      <a href="https://app.mlq.ai/" class="nav-mlq-app">
+        <span>MLQ App</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/mlq-academy/" class="nav-mlq-academy">
+        <span>MLQ Academy</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/machine-learning/" class="nav-machine-learning">
+        <span>Machine Learning</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/generative-ai/" class="nav-generative-ai">
+        <span>Generative AI</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/gpt-fine-tuning/" class="nav-gpt-fine-tuning">
+        <span>GPT Fine Tuning</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/prompt-engineering/" class="nav-prompt-engineering">
+        <span>Prompt Engineering</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/quantum-computing/" class="nav-quantum-computing">
+        <span>Quantum Computing</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/quantitative-finance/" class="nav-quantitative-finance">
+        <span>Quantitative Finance</span>
+      </a>
+    </li>
+
+              </ul>
+            </nav>
+          </div>
+          <hr class="f-mobile-menu__nav-divider">
+          <div class="f-mobile-menu__nav-section">
+            <span class="f-mobile-menu__nav-title">
+              Secondary links
+            </span>
+            <nav role="navigation" aria-label="Secondary links">
+              <ul class="f-mobile-menu__navigation-list">
+                
+    <li class="nav-about">
+      <a href="https://www.mlq.ai/about/">
+        <span>About</span>
+      </a>
+    </li>
+    <li class="nav-services">
+      <a href="https://www.mlq.ai/tag/services/">
+        <span>Services</span>
+      </a>
+    </li>
+    <li class="nav-contact">
+      <a href="https://www.mlq.ai/contact/">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-disclaimer">
+      <a href="https://www.mlq.ai/disclaimer/">
+        <span>Disclaimer</span>
+      </a>
+    </li>
+    <li class="nav-terms-of-service">
+      <a href="https://www.mlq.ai/terms-of-service/">
+        <span>Terms of Service</span>
+      </a>
+    </li>
+    <li class="nav-privacy-policy">
+      <a href="https://www.mlq.ai/privacy-policy/">
+        <span>Privacy Policy</span>
+      </a>
+    </li>
+    <li class="nav-newsletter">
+      <a href="https://www.mlq.ai/newsletter/">
+        <span>Newsletter</span>
+      </a>
+    </li>
+
+              </ul>
+            </nav>
+          </div>
+            <hr class="f-mobile-menu__nav-divider">
+            <div class="f-mobile-menu__nav-section">
+              <nav role="navigation" aria-label="Social links" class="horizontal-centered-items">
+                  <a href="https://twitter.com/mlqai" class="f-icon-button content-centered simple social in-mobile-menu" aria-label="Twitter">
+                    <span class="icon-twitter" aria-hidden="true"></span>
+                  </a>
+              </nav>
+            </div>
+          <div class="f-mobile-menu__theme-toggle-container">
+            <div class="f-theme-toggle" x-data="themeToggle()" x-init="initThemeMode()">
+  <button class="f-theme-toggle__button light" :class="{active: savedThemeMode === 'light'}" @click="setThemeMode('light', true, $event)">
+    <span class="icon-sun f-theme-toggle__button__icon" aria-hidden="true"></span>
+    <span class="f-theme-toggle__button__label">
+      Light
+    </span>
+  </button>
+  <button class="f-theme-toggle__button dark" :class="{active: savedThemeMode === 'dark'}" @click="setThemeMode('dark', true, $event)">
+    <span class="icon-moon f-theme-toggle__button__icon" aria-hidden="true"></span>
+    <span class="f-theme-toggle__button__label">
+      Dark
+    </span>
+  </button>
+  <button class="f-theme-toggle__button system active" :class="{active: savedThemeMode === 'system'}" @click="setThemeMode('system', true, $event)">
+    <span class="icon-device-desktop f-theme-toggle__button__icon" aria-hidden="true"></span>
+    <span class="f-theme-toggle__button__label">
+      System
+    </span>
+  </button>
+</div>
+          </div>
+      </div>
+      <div class="f-mobile-menu__footer">
+        <div class="f-mobile-menu__footer-inner">
+          <div class="f-mobile-menu__footer-side">
+                <div class="f-mobile-menu__account">
+                  
+  <button class="f-avatar no-appearance in-mobile-menu " aria-label="Open account menu" @click.stop="openAccountMenu">
+      <img data-src="https://www.gravatar.com/avatar/0320b5f87df0fa75260f7050ef4c5264?s=250&amp;r=g&amp;d=blank" alt="" class="lazy" width="32" height="32">
+  </button>
+                  <ul class="f-submenu account" :class="{ opened: isAccountMenuOpen() }" aria-label="Account menu" @click.away="closeAccountMenu">
+                    <li>
+                      <a href="https://www.mlq.ai/account">
+                        <span>Account</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#signout" data-members-signout="">
+                        <span>Sign Out</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+          </div>
+          <div class="f-mobile-menu__footer-side">
+            
+  
+  <script>
+    window.search = () => {
+      return {
+        show: false,
+        query: '',
+        open() {
+          const self = this
+          self.show = true
+          setTimeout(() => {
+            self.$refs.search_input.focus()
+          }, 200)
+        },
+        close() { this.show = false },
+        isOpen() { return this.show === true },
+        checkSearchFeature() {
+          if (typeof ghostSearchApiKey === 'undefined') {
+            this.$el.remove()
+          } else {
+            this.$el.classList.add('enabled')
+          }
+        },
+        performSearch() {
+          if (this.query.length > 0) {
+            const action = `${this.$refs.search_form.getAttribute('data-action')}/?query=${this.query}`
+            window.location.href = action
+          }
+        }
+      }
+    }
+  </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.mobileMenu = () => {
+    return {
+      showMenu: false,
+      showAccountMenu: false,
+      openMenu() { this.showMenu = true },
+      closeMenu() { this.showMenu = false },
+      isMenuOpen() { return this.showMenu === true },
+      openAccountMenu() { this.showAccountMenu = true },
+      closeAccountMenu() { this.showAccountMenu = false },
+      isAccountMenuOpen() { return this.showAccountMenu === true }
+    }
+  }
+</script>
+  
+<div class="f-desktop-top-bar" x-data="desktopMenu()" x-ref="desktop_menu" x-init="initScrollFeature('is-post')">
+  <div class="f-desktop-top-bar__wrapper">
+    
+<a href="https://www.mlq.ai/" class="f-logo in-desktop-top-bar  no-logo " title="MLQ.ai">
+    <span>MLQ.ai</span>
+</a>
+    <div class="f-desktop-top-bar__middle-wrapper" :class="{ 'title-displayed': isPostTitleVisible() }">
+      <div class="f-desktop-top-bar__middle top-bar-menu" :class="{ 'hidden': isPostTitleVisible() }">
+          <span class="f-desktop-top-bar__mask left" aria-hidden="true"></span>
+          <div class="f-desktop-top-bar__nav-wrapper">
+            <nav role="navigation" class="f-desktop-navigation" aria-label="Main links">
+              <ul class="f-desktop-navigation__list main">
+                
+    <li>
+      <a href="https://app.mlq.ai/" class="nav-mlq-app">
+        <span>MLQ App</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/mlq-academy/" class="nav-mlq-academy">
+        <span>MLQ Academy</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/machine-learning/" class="nav-machine-learning">
+        <span>Machine Learning</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/generative-ai/" class="nav-generative-ai">
+        <span>Generative AI</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/gpt-fine-tuning/" class="nav-gpt-fine-tuning">
+        <span>GPT Fine Tuning</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/prompt-engineering/" class="nav-prompt-engineering">
+        <span>Prompt Engineering</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/quantum-computing/" class="nav-quantum-computing">
+        <span>Quantum Computing</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/quantitative-finance/" class="nav-quantitative-finance">
+        <span>Quantitative Finance</span>
+      </a>
+    </li>
+
+              </ul>
+            </nav>
+          </div>
+          <span class="f-desktop-top-bar__mask right" aria-hidden="true"></span>
+          <nav class="f-desktop-navigation__list more" role="navigation" aria-label="Secondary links">
+            <div class="submenu">
+              <a href="#" aria-haspopup="true" onclick="return false;">
+                <span>More</span>
+              </a>
+              <ul class="f-submenu secondary">
+                
+    <li class="nav-about">
+      <a href="https://www.mlq.ai/about/">
+        <span>About</span>
+      </a>
+    </li>
+    <li class="nav-services">
+      <a href="https://www.mlq.ai/tag/services/">
+        <span>Services</span>
+      </a>
+    </li>
+    <li class="nav-contact">
+      <a href="https://www.mlq.ai/contact/">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-disclaimer">
+      <a href="https://www.mlq.ai/disclaimer/">
+        <span>Disclaimer</span>
+      </a>
+    </li>
+    <li class="nav-terms-of-service">
+      <a href="https://www.mlq.ai/terms-of-service/">
+        <span>Terms of Service</span>
+      </a>
+    </li>
+    <li class="nav-privacy-policy">
+      <a href="https://www.mlq.ai/privacy-policy/">
+        <span>Privacy Policy</span>
+      </a>
+    </li>
+    <li class="nav-newsletter">
+      <a href="https://www.mlq.ai/newsletter/">
+        <span>Newsletter</span>
+      </a>
+    </li>
+
+                  <li class="theme-toggle-container">
+                    <div class="f-theme-toggle" x-data="themeToggle(true)" x-init="initThemeMode()">
+  <button class="f-theme-toggle__button light" :class="{active: savedThemeMode === 'light'}" @click="setThemeMode('light', true, $event)">
+    <span class="icon-sun f-theme-toggle__button__icon" aria-hidden="true"></span>
+    <span class="f-theme-toggle__button__label">
+      Light
+    </span>
+  </button>
+  <button class="f-theme-toggle__button dark" :class="{active: savedThemeMode === 'dark'}" @click="setThemeMode('dark', true, $event)">
+    <span class="icon-moon f-theme-toggle__button__icon" aria-hidden="true"></span>
+    <span class="f-theme-toggle__button__label">
+      Dark
+    </span>
+  </button>
+  <button class="f-theme-toggle__button system active" :class="{active: savedThemeMode === 'system'}" @click="setThemeMode('system', true, $event)">
+    <span class="icon-device-desktop f-theme-toggle__button__icon" aria-hidden="true"></span>
+    <span class="f-theme-toggle__button__label">
+      System
+    </span>
+  </button>
+</div>
+                  </li>
+              </ul>
+            </div>
+          </nav>
+      </div>
+        <div class="f-desktop-top-bar__middle article-title" :class="{ 'visible': isPostTitleVisible() }">
+            <div class="f-desktop-top-bar__article-title-wrapper">
+              <p class="f-desktop-top-bar__article-title" aria-hidden="true">
+                Building a CSV Assistant with LangChain: MLQ Academy
+              </p>
+            </div>
+        </div>
+    </div>
+    <div class="f-desktop-top-bar__actions">
+        <nav role="navigation" aria-label="Social links" class="horizontal-centered-items">
+            <a href="https://twitter.com/mlqai" class="f-icon-button content-centered simple social in-desktop-top-bar" aria-label="Twitter">
+              <span class="icon-twitter" aria-hidden="true"></span>
+            </a>
+        </nav>
+          <nav class="f-desktop-top-bar__account" aria-label="Account menu">
+            
+  <a href="https://www.mlq.ai/account" class="f-avatar in-desktop-top-bar " aria-label="Robert Palinkas" aria-haspopup="true">
+      <img data-src="https://www.gravatar.com/avatar/0320b5f87df0fa75260f7050ef4c5264?s=250&amp;r=g&amp;d=blank" alt="" class="lazy entered loaded" width="32" height="32" data-ll-status="loaded" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/0320b5f87df0fa75260f7050ef4c5264.png">
+  </a>
+            <ul class="f-submenu account">
+              <li>
+                <a href="https://www.mlq.ai/account">
+                  <span>Account</span>
+                </a>
+              </li>
+              <li>
+                <a href="#signout" data-members-signout="">
+                  <span>Sign Out</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+      
+  
+  <script>
+    window.search = () => {
+      return {
+        show: false,
+        query: '',
+        open() {
+          const self = this
+          self.show = true
+          setTimeout(() => {
+            self.$refs.search_input.focus()
+          }, 200)
+        },
+        close() { this.show = false },
+        isOpen() { return this.show === true },
+        checkSearchFeature() {
+          if (typeof ghostSearchApiKey === 'undefined') {
+            this.$el.remove()
+          } else {
+            this.$el.classList.add('enabled')
+          }
+        },
+        performSearch() {
+          if (this.query.length > 0) {
+            const action = `${this.$refs.search_form.getAttribute('data-action')}/?query=${this.query}`
+            window.location.href = action
+          }
+        }
+      }
+    }
+  </script>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.desktopMenu = () => {
+    return {
+      showPostTitle: false,
+      menuHeight: 0,
+      lastScrollTop: 0,
+      ticking: false,
+      postTitle: null,
+      threshold: 5,
+      minAbsoluteScroll: 0,
+      lastDirectionChangePosition: 0,
+      isPostTitleVisible() { return this.showPostTitle === true },
+      initScrollFeature(isPost) {
+        if (isPost && !this.isMobile()) {
+          this.menuHeight = this.$refs.desktop_menu.offsetHeight
+          this.postTitle = document.querySelector('.js-article-title')
+          window.addEventListener(
+            'scroll',
+            this.handleScroll.bind(this),
+            { passive: true }
+          )
+        }
+      },
+      handleScroll() {
+        this.requestTick()
+      },
+      requestTick() {
+        if (!this.ticking) {
+          requestAnimationFrame(this.update.bind(this))
+        }
+        this.ticking = true
+      },
+      update() {
+        const pos = window.pageYOffset
+        const trigger = this.postTitle.getBoundingClientRect().top + pos
+        const triggerOffset = this.postTitle.offsetHeight
+
+        if (this.lastScrollTop >= trigger + triggerOffset) {
+          if (this.scrolledUp(pos)) {
+            if (this.minAbsoluteScroll >= this.threshold) {
+              this.showPostTitle = false
+            }
+          } else {
+            if (this.minAbsoluteScroll >= this.threshold) {
+              this.showPostTitle = true
+            }
+          }
+        } else {
+          this.showPostTitle = false
+        }
+
+        this.lastScrollTop = window.pageYOffset
+        this.ticking = false
+      },
+      scrolledUp(currentScrollPosition) {
+        let up = false
+
+        if (currentScrollPosition < this.lastScrollTop) {
+          up = true
+        }
+
+        this.minAbsoluteScroll = Math.abs(
+          currentScrollPosition - this.lastScrollTop
+        )
+
+        return up
+      },
+      isMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      }
+    }
+  }
+</script>
+    <div class="f-header-progress js-header-progress" style="width: 0%;"></div>
+</header>
+
+  <script>
+    function themeToggle(initialize) {
+      return {
+        savedThemeMode: 'system',
+        initThemeMode() {
+          if (!initialize) {
+            return
+          }
+
+          this.initialized = true
+          this.savedThemeMode = this.getThemeMode()
+          this.setThemeMode(this.savedThemeMode)
+
+          if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)')
+              .addEventListener('change', this.updateSystemTheme.bind(this))
+          }
+        },
+        updateSystemTheme() {
+          if (this.savedThemeMode !== 'system') {
+            return
+          }
+
+          if (this.isSystemDark()) {
+            this.setThemeMode('dark', false)
+          } else {
+            this.setThemeMode('light', false)
+          }
+        },
+        isSystemDark() {
+          return window.matchMedia
+            && window.matchMedia('(prefers-color-scheme: dark)').matches
+        },
+        setThemeMode(mode, saveTheme = true, e) {
+          const html = document.querySelector('html')
+          html.setAttribute('theme-mode', mode)
+
+          if (saveTheme) {
+            this.savedThemeMode = mode
+            if (mode === 'system') {
+              this.updateSystemTheme()
+            }
+            localStorage.setItem('firma-theme-mode', mode)
+          }
+
+          if (e) {
+            e.currentTarget.blur()
+          }
+
+          this.rerenderGhostIframes()
+        },
+        getThemeMode() {
+          const localValue = localStorage.getItem('firma-theme-mode')
+          if (!localValue) {
+            return 'system'
+          }
+
+          return localValue
+        },
+        rerenderGhostIframes() {
+          const comments = document.querySelector('.js-comments > div > iframe')
+
+          if (comments) {
+            comments.contentDocument.location.reload(true)
+          }
+        }
+      }
+    }
+  </script>
+  <main class="f-standard-container has-newsletter js-standard-container" role="main">
+      <div class="f-standard-wrapper in-post">
+             <article class="f-article js-article"></article>
+              
+<header class="f-article-header ">
+      <div class="f-article-header__tag-container">
+        <a href="https://www.mlq.ai/tag/mlq-academy/" class="f-article-tag">
+          MLQ Academy
+          <span class="icon-chevron-right" aria-hidden="true"></span>
+        </a>
+      </div>
+  <h1 class="f-article-header__title js-article-title">Building a CSV Assistant with LangChain: MLQ Academy</h1>
+    <p class="f-article-header__excerpt in-post">
+    In this video tutorial, we'll walk through how to use LangChain and 
+OpenAI to create a CSV assistant that allows you to chat with and 
+visualize data with natural language.
+  </p>
+    <p class="f-article-header__time">
+      <span>2 months ago</span>
+        <span>&nbsp; • &nbsp;</span>
+        <span>
+          10 min read
+        </span>
+    </p>
+        <div class="f-article-header__author">
+          
+  <a href="https://www.mlq.ai/author/peter/" class="f-avatar in-article-header " aria-label="Peter Foy's profile'" aria-haspopup="false">
+      <img data-src="/content/images/size/w50/2020/11/0.jpg" alt="" class="lazy entered loaded" width="32" height="32" data-ll-status="loaded" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/0.jpg">
+  </a>
+          <span>
+            By 
+            <a href="https://www.mlq.ai/author/peter/">Peter Foy</a>
+          </span>
+        </div>
+</header>
+  <div class="f-article__image">
+    <figure>
+      <img data-src="/content/images/size/w1050/2023/08/CSV-Assistant-Langchain--1--1.png" data-srcset="
+          /content/images/size/w750/2023/08/CSV-Assistant-Langchain--1--1.png 750w,
+          /content/images/size/w1050/2023/08/CSV-Assistant-Langchain--1--1.png 1050w,
+          /content/images/size/w1750/2023/08/CSV-Assistant-Langchain--1--1.png 1750w
+        " sizes="
+          (max-width: 48rem) 46.875rem,
+          (max-width: 64rem) 65.625rem,
+          109.375rem
+        " alt="" class="js-article-image entered loaded" width="1200" height="800" data-ll-status="loaded" srcset="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/CSV-Assistant-Langchain--1--1.png 750w, Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/CSV-Assistant-Langchain--1--1_003.png 1050w, Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/CSV-Assistant-Langchain--1--1_002.png 1750w" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/CSV-Assistant-Langchain--1--1_003.png">
+    </figure>
+  </div>
+         
+          <div class="f-article-content js-article-content">
+              <p>In this video tutorial, we'll walk through how to use 
+LangChain and OpenAI to create a CSV assistant that allows you to chat 
+with and visualize data with natural language.</p>
+<p>To do so, we'll use <a href="https://python.langchain.com/docs/integrations/toolkits/csv?ref=mlq.ai">LangChain's CSV agent</a>, OpenAI's function calling capability, and Streamlit for the frontend.</p>
+<blockquote>This agent calls the Pandas DataFrame agent under the hood, 
+which in turn calls the Python agent, which executes LLM generated 
+Python code.</blockquote>
+<p>This is the <a href="https://www.mlq.ai/csv-assistant-langchain/">video companion to this article</a> and includes all the code and a walkthrough of how to implement it.</p>
+<figure class="kg-card kg-image-card"><img src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/Screenshot-2023-08-17-at-1.16.07-PM-1.png" class="kg-image lightense-target" alt="" loading="lazy" width="1798" height="928" srcset="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/Screenshot-2023-08-17-at-1.16.07-PM-1_004.png 600w, Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/Screenshot-2023-08-17-at-1.16.07-PM-1_003.png 1000w, Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/Screenshot-2023-08-17-at-1.16.07-PM-1_002.png 1600w, Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/Screenshot-2023-08-17-at-1.16.07-PM-1.png 1798w" sizes="(min-width: 720px) 720px"></figure>
+<figure class="kg-card kg-image-card"><img src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/Screenshot-2023-08-17-at-3.14.01-PM-1.png" class="kg-image lightense-target" alt="" loading="lazy" width="1600" height="1359" srcset="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/Screenshot-2023-08-17-at-3.14.01-PM-1_003.png 600w, Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/Screenshot-2023-08-17-at-3.14.01-PM-1_002.png 1000w, Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/Screenshot-2023-08-17-at-3.14.01-PM-1.png 1600w" sizes="(min-width: 720px) 720px"></figure>
+<!--members-only-->
+<h2 id="video-tutorial">Video Tutorial</h2>
+<script src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/lnwb9bhs0q.jsonp" async=""></script><script src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/E-v1.js" async=""></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_video_foam_dummy" data-source-container-id="wistia-lnwb9bhs0q-1" style="border: 0px; display: block; height: 0px; margin: 0px; padding: 0px; position: static; visibility: hidden; width: auto;"></div><div class="wistia_embed wistia_async_lnwb9bhs0q seo=true videoFoam=true wistia_embed_initialized" style="height: 405px; position: relative; width: 720px;" id="wistia-lnwb9bhs0q-1"><div id="wistia_chrome_23" class="w-chrome" style="display: inline-block; height: 405px; line-height: normal; margin: 0px; padding: 0px; position: relative; vertical-align: top; width: 720px; outline: none; overflow: hidden; box-sizing: content-box; border-radius: 0px;" tabindex="-1"><div id="wistia_grid_43_wrapper" style="display: block; width: 720px; height: 405px;"><div id="wistia_grid_43_above" style="height: 0px; font-size: 0px; line-height: 0px;"> </div><div id="wistia_grid_43_main" style="width: 720px; left: 0px; height: 405px; margin-top: 0px;"><div id="wistia_grid_43_behind"></div><div id="wistia_grid_43_center" style="width: 100%; height: 100%;"><div class="w-video-wrapper w-css-reset" style="height: 100%; position: absolute; top: 0px; width: 100%; opacity: 1; background-color: rgb(0, 0, 0);"><video id="wistia_simple_video_107" crossorigin="anonymous" style="background: transparent; display: block; height: 100%; max-height: none; max-width: none; position: static; visibility: visible; width: 100%; object-fit: contain;" poster="https://fast.wistia.com/assets/images/blank.gif" aria-label="Video" src="blob:https://www.mlq.ai/dd94ee0e-4de5-4503-a282-c01876b13f1f" controlslist="nodownload" playsinline="" preload="metadata" type="video/m3u8" x-webkit-airplay="allow"></video></div><div class="w-ui-container" style="height: 100%; left: 0px; position: absolute; top: 0px; width: 100%; opacity: 1;"><div class="w-vulcan-v2 w-css-reset" id="w-vulcan-v2-42" style="border-radius: 0px; box-sizing: border-box; cursor: default; direction: ltr; height: 100%; left: 0px; position: absolute; visibility: visible; top: 0px; width: 100%;"><div class="w-vulcan--background w-css-reset" style="height: 100%; left: 0px; position: absolute; top: 0px; width: 100%;"><div class="w-css-reset" data-handle="statusBar"></div><div class="w-css-reset" data-handle="backgroundFocus"><button aria-label="Play Video: CSV Assistant LangChain" class="w-css-reset w-vulcan-v2-button" style="width: 0px; height: 0px; pointer-events: none;" tabindex="0"></button></div><div class="w-css-reset" data-handle="thumbnail"><div><div style="filter: blur(5px); height: 100%; left: 0px; position: absolute; top: 0px; width: 100%; display: block;" class="w-css-reset"><img class="w-css-reset" srcset="" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/swatch.jpg" style="height: 405px; left: 0px; position: absolute; top: 0px; width: 720px; clip: auto; display: block; border-radius: 0px; border-width: 0px; border-style: solid; border-color: rgb(0, 0, 0); box-sizing: content-box;" alt="Video Thumbnail" aria-hidden="true"></div><div style="height: 100%; left: 0px; opacity: 1; position: absolute; top: 0px; width: 100%; display: block; transition: opacity 3s ease 0s;" class="w-css-reset"><img class="w-css-reset" srcset="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/cbad6cd561e63f1b11f5e090359192385214cf04_004.webp 320w, Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/cbad6cd561e63f1b11f5e090359192385214cf04_004.webp 640w, Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/cbad6cd561e63f1b11f5e090359192385214cf04_002.webp 960w, Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/cbad6cd561e63f1b11f5e090359192385214cf04_003.webp 1280w, Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/cbad6cd561e63f1b11f5e090359192385214cf04.webp 1920w, Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/cbad6cd561e63f1b11f5e090359192385214cf04.webp 3840w" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/cbad6cd561e63f1b11f5e090359192385214cf04.webp" style="height: 405px; left: 0px; position: absolute; top: 0px; width: 720px; clip: auto; display: block; border-radius: 0px; box-sizing: content-box; border-width: 0px; border-style: solid; border-color: rgb(0, 0, 0);" alt="Video Thumbnail"></div></div></div></div><div aria-live="polite" class="w-vulcan--aria-live w-css-reset" aria-atomic="true" style="position: absolute; left: -99999em;"></div><div class="w-vulcan-overlays-table w-css-reset" style="display: table; pointer-events: none; position: absolute; width: 100%;"><div class="w-vulcan-overlays--left w-css-reset" style="display: table-cell; vertical-align: top; position: relative; width: 0px;"><div style="height: 371px;" class="w-css-reset"></div></div><div class="w-vulcan-overlays--center w-css-reset" style="display: table-cell; vertical-align: top; position: relative; width: 100%;"><div style="height: 371px;" class="w-css-reset"><div class="w-css-reset" style="pointer-events: auto;" data-handle="bigPlayButton"><div class="w-bpb-wrapper w-css-reset w-css-reset-tree" style="border-radius: 0px; display: block; left: calc(50%); margin-left: -62.5px; margin-top: -40px; overflow: hidden; position: absolute; top: calc(50% - 0px);"><button class="w-big-play-button w-css-reset-button-important w-vulcan-v2-button" style="cursor: pointer; height: 80px; box-shadow: none; width: 125px;" aria-label="Play Video: CSV Assistant LangChain" tabindex="0"><div style="background: rgb(88, 23, 210); display: block; left: 0px; height: 80px; mix-blend-mode: darken; position: absolute; top: 0px; width: 125px;"></div><div style="background-color: rgba(88, 23, 210, 0.7); height: 80px; left: 0px; position: absolute; top: 0px; transition: background-color 150ms ease 0s; width: 125px;"></div><svg x="0px" y="0px" viewBox="0 0 125 80" enable-background="new 0 0 125 80" aria-hidden="true" style="fill: rgb(255, 255, 255); height: 80px; left: 0px; stroke-width: 0px; top: 0px; width: 100%; position: absolute;" alt=""><rect fill-rule="evenodd" clip-rule="evenodd" fill="none" width="125" height="80"></rect><polygon fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" points="53,22 53,58 79,40"></polygon></svg></button></div></div><div class="w-css-reset" style="pointer-events: auto;" data-handle="clickForSoundButton"><div class="w-css-reset w-css-reset-tree" data-handle="click-for-sound-backdrop" style="display: none; height: 100%; left: 0px; pointer-events: auto; position: absolute; top: 0px; width: 100%;"><button aria-label="Click for sound" class="w-vulcan-v2-button click-for-sound-btn" style="background: rgba(0, 0, 0, 0.8); border: 2px solid transparent; border-radius: 60px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; outline: none; pointer-events: auto; position: absolute; right: 20.5px; top: 20.5px;"><div style="display: flex; align-items: center; justify-content: flex-end; white-space: nowrap; overflow: hidden; max-width: 0px; transition: max-width 200ms ease 0s;"><span style="color: rgb(255, 255, 255); font-family: WistiaPlayerInter, Helvetica, sans-serif; font-size: 18px; font-weight: 500; padding-left: 1em;">Click for sound</span></div><svg viewBox="0 0 237 237" width="52.5" height="52.5"><style>
+  @keyframes VOLUME_SMALL_WAVE_FLASH {
+    0% { opacity: 0; }
+    33% { opacity: 1; }
+    66% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes VOLUME_LARGE_WAVE_FLASH {
+    0% { opacity: 0; }
+    33% { opacity: 1; }
+    66% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  .volume__small-wave {
+    animation: VOLUME_SMALL_WAVE_FLASH 2s infinite;
+    opacity: 0;
+  }
+
+  .volume__large-wave {
+    animation: VOLUME_LARGE_WAVE_FLASH 2s infinite .3s;
+    opacity: 0;
+  }
+</style><path fill="#fff" d="M88 107H65v24h24l23 23V84z"></path><g fill="none" stroke="#fff" stroke-linecap="round" stroke-width="10"><path d="M142 86c9 21 9 44 0 65" class="volume__small-wave"></path><path d="M165 74c13 23 13 66 0 89" class="volume__large-wave"></path></g></svg></button></div></div><div class="w-css-reset" style="pointer-events: auto;" data-handle="playPauseNotifier"></div><div class="w-css-reset" style="pointer-events: auto;" data-handle="captions"><nothing></nothing></div><div class="w-css-reset" style="pointer-events: auto;" data-handle="playPauseLoading"><div class="w-css-reset w-css-reset-tree" style="height: 100%; left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"><button aria-label="Play Video" class="w-vulcan-v2-button" style="background: rgba(0, 0, 0, 0.6); border: 0px; border-radius: 50%; cursor: pointer; display: none; height: 140px; left: 50%; margin: 0px; padding: 0px; pointer-events: auto; position: absolute; opacity: 0; outline: none; top: 50%; transform: translate(-50%, -50%) scale(0.8); transition: opacity 200ms ease 0s, transform 600ms ease 0s; width: 140px;"><div style="box-sizing: border-box; height: 100%; padding: 47.25px 47.25px 47.25px 57.75px;"><div style="height: 100%; width: 100%;"><div style="display: none; height: 100%; width: 100%;"><svg x="0px" y="0px" viewBox="0 0 11.556 16" enable-background="new 0 0 11.556 16" aria-hidden="true" style="fill: rgb(255, 255, 255); height: 100%; left: 0px; stroke-width: 0px; top: 0px; width: 100%;" class="w-css-reset w-css-reset-tree"><g><rect x="0" y="0" width="3.5" height="12"></rect><rect x="6.5" y="0" width="3.5" height="12"></rect></g></svg></div><div style="display: block; height: 100%; width: 100%;"><svg x="0px" y="0px" viewBox="0 0 11.556 16" enable-background="new 0 0 11.556 16" aria-hidden="true" style="fill: rgb(255, 255, 255); height: 100%; left: 0px; stroke-width: 0px; top: 0px; width: 100%;" class="w-css-reset w-css-reset-tree"><polygon points="11.556,7.5 0,15 0,0"></polygon></svg></div></div></div></button></div></div><div class="w-css-reset" style="pointer-events: auto;" data-handle="transcript"><div style="position: absolute;" class="w-css-reset"></div></div></div></div><div class="w-vulcan-overlays--right w-css-reset" style="display: table-cell; vertical-align: top; position: relative; width: 0px;"><div style="height: 371px;" class="w-css-reset"></div></div></div><div class="w-bottom-bar w-css-reset" style="bottom: 0px; border-radius: 0px; border-collapse: collapse; display: table; height: 34px; pointer-events: none; position: absolute; padding-left: 0px; padding-right: 0px; right: 0px; table-layout: auto; transform: unset; width: calc(100% - 0px);"><div class="w-bottom-bar-lower w-css-reset" style="position: relative;"><div style="height: 100%; left: 0px; position: absolute; top: 0px; width: 100%;"><div style="background: rgb(88, 23, 210); display: none; height: 100%; mix-blend-mode: darken; left: 0px; opacity: 1; position: absolute; top: 0px; transition: opacity 0s ease 0s; width: 100%;"></div><div style="background: rgba(88, 23, 210, 0.85); border-radius: 0px; height: 100%; opacity: 1; left: 0px; position: absolute; top: 0px; transition: opacity 0s ease 0s; width: 100%;"></div></div><div style="display: none;"><div style="background: rgb(88, 23, 210); display: none; height: 100%; mix-blend-mode: darken; left: 0px; opacity: 1; position: absolute; top: 0px; transition: opacity 0s ease 0s; width: 100%;"></div><div style="background: rgba(88, 23, 210, 0.85); border-radius: 0px; height: 100%; opacity: 1; left: 0px; position: absolute; top: 0px; transition: opacity 0s ease 0s; width: 100%;"></div></div><div class="w-bottom-bar-left w-css-reset" style="display: table-cell; vertical-align: top; position: relative; width: 0px; opacity: 1; transition: opacity 0s ease 0s;"><div class="w-bottom-bar-left-inner w-css-reset" style="height: 34px; position: relative; pointer-events: auto; white-space: nowrap;"><div class="w-css-reset" style="display: inline-block; vertical-align: top;" data-handle="smallPlayButton"><div class="w-vulcan-button-wrapper w-css-reset" style="display: inline-block; height: 34px; position: relative; vertical-align: top; width: 40px;"><button class="w-vulcan-v2-button w-css-reset w-css-reset-tree w-css-reset-button-important" style="background-color: rgba(0, 0, 0, 0); border-radius: 0px; box-shadow: none; cursor: pointer; height: 100%; position: relative; transition: background-color 150ms ease 0s; width: calc(100% + 0px); padding-right: 0px;" tabindex="0" aria-label="Play Video" title="Play Video"><div class="w-vulcan-icon-wrapper" style="box-sizing: border-box; height: 100%; position: relative; opacity: 1; transform: scale(1.001); transition: transform 200ms ease 0s;" data-handle="smallPlayButton_icon_wrapper"><div style="box-sizing: border-box; height: 100%; margin-left: 1px; padding: 10px 0px 9px; position: relative; width: 100%;"><div style="height: 100%; width: 100%;"><div style="display: none; height: 100%; width: 100%;"><svg x="0px" y="0px" viewBox="0 0 11.556 16" enable-background="new 0 0 11.556 16" aria-hidden="true" style="fill: rgb(255, 255, 255); height: 100%; left: 0px; stroke-width: 0px; top: 0px; width: 100%; vertical-align: top;" class="w-css-reset w-css-reset-tree"><g><rect x="0" y="0" width="3.5" height="12"></rect><rect x="6.5" y="0" width="3.5" height="12"></rect></g></svg></div><div style="display: block; height: 100%; width: 100%;"><svg x="0px" y="0px" viewBox="0 0 11.556 16" enable-background="new 0 0 11.556 16" aria-hidden="true" style="fill: rgb(255, 255, 255); height: 100%; left: 0px; stroke-width: 0px; top: 0px; width: 100%; vertical-align: top;" class="w-css-reset w-css-reset-tree"><polygon points="11.556,7.5 0,15 0,0"></polygon></svg></div></div></div></div></button></div></div></div></div><div class="w-bottom-bar-middle w-css-reset" style="display: table-cell; vertical-align: top; position: relative; width: 100%; opacity: 1; transition: opacity 0s ease 0s;"><div class="w-bottom-bar-middle-inner w-css-reset" style="height: 34px; position: relative; pointer-events: auto; white-space: nowrap; opacity: 1; transform: translateY(0px); transition: opacity 0ms ease 0s, transform 0ms ease 0s;"><div class="w-css-reset" style="height: 100%; position: relative;" data-handle="playbar"><div class="w-playbar-wrapper w-css-reset w-css-reset-tree" style="display: flex; height: 100%; width: 100%;"><div class="w-playbar__time" style="box-sizing: content-box; color: white; font-family: WistiaPlayerInterNumbersSemiBold, Helvetica, sans-serif; font-size: 13px; letter-spacing: 0.5px; line-height: 34px; padding-left: 5px; pointer-events: none; position: relative; text-align: center; width: 28px;">5:07</div><div aria-label="Playbar" aria-orientation="horizontal" aria-valuemax="307.467" aria-valuemin="0" aria-valuenow="0" aria-valuetext="0 seconds" role="slider" style="cursor: pointer; flex: 1 1 0%; height: 34px; outline: none; margin-left: 15px; margin-right: 10px; position: relative;" tabindex="0"><canvas height="68" style="height: 34px; left: -15px; position: absolute; top: 0px; width: 487px;" width="974"></canvas><div style="border-radius: 50%; height: 11.2px; left: -5.6px; opacity: 0; position: absolute; top: 11.4px; width: 11.2px;"></div></div></div></div></div></div><div class="w-bottom-bar-right w-css-reset" style="display: table-cell; vertical-align: top; position: relative; width: 0px; opacity: 1; transition: opacity 0s ease 0s; white-space: nowrap;"><div class="w-bottom-bar-right-inner-anchor w-css-reset" style="height: 34px; position: relative; pointer-events: auto; white-space: nowrap; display: inline-block; right: 0px; top: 0px; vertical-align: top;"><div class="w-bottom-bar-right-inner w-css-reset" style="height: 34px; position: relative; pointer-events: auto; white-space: nowrap; display: inline-block; opacity: 1; right: 0px; top: 0px; transform: translateY(0px); transition: opacity 0ms ease 0s, transform 0ms ease 0s; padding-right: 0px;"><div class="w-css-reset" style="display: inline-block; vertical-align: top;" data-handle="captionsButton"><div class="w-vulcan-button-wrapper w-css-reset" style="display: inline-block; height: 34px; position: relative; vertical-align: top; width: 40px;"><button class="w-vulcan-v2-button w-css-reset w-css-reset-tree w-css-reset-button-important" style="background-color: rgba(0, 0, 0, 0); border-radius: 0px; box-shadow: none; cursor: pointer; height: 100%; position: relative; transition: background-color 150ms ease 0s; width: calc(100% + 0px); padding-right: 0px;" tabindex="0" aria-expanded="false" aria-label="Show captions menu" title="Show captions menu"><div class="w-vulcan-icon-wrapper" style="box-sizing: border-box; height: 100%; position: relative; opacity: 1; transform: scale(1.001); transition: transform 200ms ease 0s;" data-handle="captionsButton_icon_wrapper"><svg x="0px" y="0px" viewBox="0 0 40 34" enable-background="new 0 0 40 34" aria-hidden="true" style="fill: rgb(255, 255, 255); height: 100%; left: 0px; stroke-width: 0px; top: 0px; width: 100%;"><g><path fill="none" stroke="#ffffff" stroke-linecap="round" stroke-miterlimit="10" stroke-width="1.8" d="M18.4,18.7c-0.5,0.7-1.1,1.2-2.1,1.2c-1.3,0-2.4-1.1-2.4-2.8c0-1.6,1-2.8,2.4-2.8c1,0,1.6,0.5,2,1.2"></path></g><g><path fill="none" stroke="#ffffff" stroke-linecap="round" stroke-miterlimit="10" stroke-width="1.8" d="M25.8,18.7c-0.5,0.7-1.1,1.2-2.1,1.2c-1.3,0-2.4-1.1-2.4-2.8c0-1.6,1-2.8,2.4-2.8c1,0,1.6,0.5,2,1.2"></path></g><g><path fill="none" stroke="#ffffff" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M31,21.9c0,1.6-1.4,3-3,3H12c-1.6,0-3-1.4-3-3V12c0-1.6,1.4-3,3-3h16c1.6,0,3,1.4,3,3V21.9z"></path></g></svg></div></button></div></div><div class="w-css-reset" style="display: inline-block; vertical-align: top;" data-handle="volumeButton"><div class="w-vulcan-button-wrapper w-css-reset" style="display: inline-block; height: 34px; position: relative; vertical-align: top; width: 40px;"><button class="w-vulcan-v2-button w-css-reset w-css-reset-tree w-css-reset-button-important" style="background-color: rgba(0, 0, 0, 0); border-radius: 0px; box-shadow: none; cursor: pointer; height: 100%; position: relative; transition: background-color 150ms ease 0s; width: calc(100% + 0px); padding-right: 0px;" tabindex="0" aria-label="Mute" title="Mute"><div class="w-vulcan-icon-wrapper" style="box-sizing: border-box; height: 100%; position: relative; opacity: 1; transform: scale(1.001); transition: transform 200ms ease 0s;" data-handle="volumeButton_icon_wrapper"><svg x="0px" y="0px" viewBox="0 0 40 34" enable-background="new 0 0 40 34" aria-hidden="true" style="fill: rgb(255, 255, 255); height: 100%; left: 0px; stroke-width: 0px; top: 0px; width: 100%;"><g style="transform: translateX(1.25px); transition: transform 100ms ease 0s;"><g><path d="M13.8,14.2c-0.5,0.5-1.4,0.8-2,0.8h-1.6C9.5,15,9,15.5,9,16.2v1.6c0,0.7,0.5,1.2,1.2,1.2h1.6c0.7,0,1.6,0.4,2,0.8l2.3,2.3c0.5,0.5,0.8,0.3,0.8-0.4v-9.6c0-0.7-0.4-0.8-0.8-0.4L13.8,14.2z"></path></g><g><path fill="none" stroke="#ffffff" stroke-line-cap="round" stroke-miterlimit="10" stroke-width="2" d="M22,11.7c0,0,1.1,2.5,1.1,5s-1.1,5-1.1,5" style="opacity: 1; transition: opacity 100ms ease 0s;"></path><path fill="none" stroke="#ffffff" stroke-line-cap="round" stroke-miterlimit="10" stroke-width="2" d="M25.8,9.2c0,0,1.7,3.8,1.7,7.5c0,3.7-1.7,7.5-1.7,7.5" style="opacity: 1; transition: opacity 100ms ease 0s;"></path></g><g style="opacity: 0; transition: opacity 100ms ease 0s;"><line fill="none" stroke="#ffffff" stroke-line-cap="round" stroke-miterlimit="10" stroke-width="1.8102" x1="19.2" y1="15" x2="23.2" y2="19"></line><line fill="none" stroke="#ffffff" stroke-line-cap="round" stroke-miterlimit="10" stroke-width="1.8102" x1="19.2" y1="19" x2="23.2" y2="15"></line></g></g></svg></div></button></div></div><div class="w-css-reset" style="display: inline-block; vertical-align: top;" data-handle="settingsButton"><div class="w-vulcan-button-wrapper w-css-reset" style="display: inline-block; height: 34px; position: relative; vertical-align: top; width: 40px;"><button class="w-vulcan-v2-button w-css-reset w-css-reset-tree w-css-reset-button-important" style="background-color: rgba(0, 0, 0, 0); border-radius: 0px; box-shadow: none; cursor: pointer; height: 100%; position: relative; transition: background-color 150ms ease 0s; width: calc(100% + 0px); padding-right: 0px;" tabindex="0" aria-expanded="false" aria-label="Show settings menu" title="Show settings menu"><div class="w-vulcan-icon-wrapper" style="box-sizing: border-box; height: 100%; position: relative; opacity: 1; transform: scale(1.001); transition: transform 200ms ease 0s;" data-handle="settingsButton_icon_wrapper"><svg x="0px" y="0px" viewBox="0 0 40 34" enable-background="new 0 0 40 34" aria-hidden="true" style="fill: rgb(255, 255, 255); height: 100%; left: 0px; stroke-width: 0px; top: 0px; width: 100%;"><g><g><path d="M28.3,16.4h-1.9c-0.4,0-0.8-0.3-0.9-0.7l-0.4-1.1c-0.2-0.3-0.1-0.8,0.2-1.1l1.3-1.3c0.3-0.3,0.3-0.7,0-1l-0.4-0.4c-0.3-0.3-0.7-0.3-1,0l-1.3,1.3c-0.3,0.3-0.8,0.3-1.1,0.1l-1.1-0.5c-0.4-0.1-0.7-0.5-0.7-0.9V9.1c0-0.4-0.3-0.7-0.7-0.7h-0.6c-0.4,0-0.7,0.3-0.7,0.7v1.7c0,0.4-0.3,0.8-0.7,0.9l-1.2,0.5c-0.3,0.2-0.8,0.1-1.1-0.2l-1.2-1.2c-0.3-0.3-0.7-0.3-1,0l-0.4,0.4c-0.3,0.3-0.3,0.7,0,1l1.2,1.2c0.3,0.3,0.3,0.8,0.1,1.1l-0.5,1.2c-0.1,0.4-0.5,0.7-0.9,0.7h-1.6c-0.4,0-0.7,0.3-0.7,0.7v0.6c0,0.4,0.3,0.7,0.7,0.7h1.6c0.4,0,0.8,0.3,0.9,0.7l0.5,1.2c0.2,0.3,0.1,0.8-0.1,1.1l-1.2,1.2c-0.3,0.3-0.3,0.7,0,1l0.4,0.4c0.3,0.3,0.7,0.3,1,0l1.2-1.2c0.3-0.3,0.8-0.3,1.1-0.2l1.2,0.5c0.4,0.1,0.7,0.5,0.7,0.9v1.7c0,0.4,0.3,0.7,0.7,0.7h0.6c0.4,0,0.7-0.3,0.7-0.7V24c0-0.4,0.3-0.8,0.7-0.9l1.1-0.5c0.3-0.2,0.8-0.1,1.1,0.1l1.3,1.3c0.3,0.3,0.7,0.3,1,0l0.4-0.4c0.3-0.3,0.3-0.7,0-1l-1.3-1.3C25,21,25,20.5,25.1,20.2l0.4-1.1c0.1-0.4,0.5-0.7,0.9-0.7h1.9c0.4,0,0.7-0.3,0.7-0.7v-0.6C29,16.7,28.7,16.4,28.3,16.4z M23.8,17.5c0,2.2-1.8,3.9-3.9,3.9c-2.2,0-3.9-1.8-3.9-3.9s1.7-3.9,3.9-3.9C22.1,13.6,23.8,15.3,23.8,17.5z"></path></g></g></svg></div></button></div></div><div class="w-css-reset" style="display: inline-block; vertical-align: top;" data-handle="fullscreenControl"><div class="w-vulcan-button-wrapper w-css-reset" style="display: inline-block; height: 34px; position: relative; vertical-align: top; width: 40px;"><button class="w-vulcan-v2-button w-css-reset w-css-reset-tree w-css-reset-button-important" style="background-color: rgba(0, 0, 0, 0); border-radius: 0px; box-shadow: none; cursor: pointer; height: 100%; position: relative; transition: background-color 150ms ease 0s; width: calc(100% + 0px); padding-right: 0px;" tabindex="0" aria-label="Fullscreen" title="Fullscreen"><div class="w-vulcan-icon-wrapper" style="box-sizing: border-box; height: 100%; position: relative; opacity: 1; transform: scale(1.001); transition: transform 200ms ease 0s;" data-handle="fullscreenControl_icon_wrapper"><svg x="0px" y="0px" viewBox="0 0 40 34" enable-background="new 0 0 40 34" aria-hidden="true" style="fill: rgb(255, 255, 255); height: 100%; left: 0px; stroke-width: 0px; top: 0px; width: 100%;"><g><g><polyline fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="31.4,12.6 31.4,8.7 25.8,8.7"></polyline><polyline fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="14.7,8.7 9.1,8.7 9.1,12.6"></polyline><polyline fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="25.8,24.8 31.4,24.8 31.4,20.9"></polyline><polyline fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="9.1,20.9 9.1,24.8 14.7,24.8"></polyline></g><rect x="13.7" y="12.3" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" enable-background="new" width="13.3" height="8.9"></rect></g></svg></div></button></div></div></div></div><div class="w-ellipsis w-css-reset" style="height: 34px; position: relative; pointer-events: auto; white-space: nowrap; display: none;"></div></div></div></div><div class="w-foreground w-css-reset" style="height: 100%; left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"><div class="w-css-reset" style="pointer-events: auto;" data-handle="contextMenu"></div><div class="w-css-reset" style="pointer-events: auto;" data-handle="loadingHourglass"></div><div class="w-css-reset" style="pointer-events: auto;" data-handle="focusOutline"><div style="box-shadow: rgb(255, 255, 255) 0px 0px 0px 2px inset; border-radius: 0px; display: none; height: 100%; left: 0px; pointer-events: none; position: absolute; right: 0px; width: 100%;" class="w-focus-outline"></div></div><div class="w-css-reset" style="pointer-events: auto;" data-handle="playbarlessProgressIndicator"><div style="bottom: 0px; left: 0px; position: absolute; width: 100%;"><div style="background-color: rgb(255, 255, 255); bottom: 0px; display: none; height: 0px; opacity: 0; transition: opacity 1s ease 0s, height 0.5s ease 0s; width: 100%;"><div style="background-color: rgb(88, 23, 210); height: 100%; transition: width 500ms ease-out 500ms; width: 0%;"></div></div></div></div></div></div><style id="wistia_49_style" type="text/css" class="wistia_injected_style">
+      #wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset{font-size:14px;}
+#wistia_chrome_23 #wistia_grid_43_wrapper div.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper span.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper ul.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper li.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper label.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper fieldset.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper button.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper img.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper a.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper svg.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper p.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper a.w-css-reset{border:0;}
+#wistia_chrome_23 #wistia_grid_43_wrapper h1.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:2em;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper h2.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:1.5em;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper h3.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:1.17em;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper p.w-css-reset{margin:1.4em 0;}
+#wistia_chrome_23 #wistia_grid_43_wrapper a.w-css-reset{display:inline;}
+#wistia_chrome_23 #wistia_grid_43_wrapper span.w-css-reset{display:inline;}
+#wistia_chrome_23 #wistia_grid_43_wrapper svg.w-css-reset{display:inline;}
+#wistia_chrome_23 #wistia_grid_43_wrapper ul.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased;list-style-type:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper ol.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased;list-style-type:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper li.w-css-reset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased;list-style-type:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper ul:before.w-css-reset{display:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper ol:before.w-css-reset{display:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper li:before.w-css-reset{display:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper ul:after.w-css-reset{display:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper ol:after.w-css-reset{display:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper li:after.w-css-reset{display:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper label.w-css-reset{background-attachment:scroll;background-color:transparent;background-image:none;background-position:0 0;background-repeat:no-repeat;background-size:100% 100%;float:none;outline:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper button.w-css-reset{background-attachment:scroll;background-color:transparent;background-image:none;background-position:0 0;background-repeat:no-repeat;background-size:100% 100%;border:0;border-radius:0;outline:none;position:static}
+#wistia_chrome_23 #wistia_grid_43_wrapper img.w-css-reset{border:0;display:inline-block;vertical-align:top;border-radius:0;outline:none;position:static}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset button::-moz-focus-inner{border: 0;}
+      #wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree {font-size:14px;}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree div{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree span{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree ul{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree li{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree label{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree fieldset{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree button{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree img{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree a{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree svg{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree p{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree a{border:0;}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree h1{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:2em;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree h2{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:1.5em;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree h3{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:1.17em;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree p{margin:1.4em 0;}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree a{display:inline;}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree span{display:inline;}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree svg{display:inline;}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree ul{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased;list-style-type:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree ol{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased;list-style-type:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree li{box-sizing:inherit;box-shadow:none;color:inherit;display:block;float:none;font:inherit;font-family:inherit;font-style:normal;font-weight:normal;font-size:inherit;letter-spacing:0;line-height:inherit;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;padding:0;position:static;text-decoration:none;text-transform:none;text-shadow:none;transition:none;word-wrap:normal;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-user-select:none;-webkit-font-smoothing:antialiased;list-style-type:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree ul:before{display:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree ol:before{display:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree li:before{display:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree ul:after{display:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree ol:after{display:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree li:after{display:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree label{background-attachment:scroll;background-color:transparent;background-image:none;background-position:0 0;background-repeat:no-repeat;background-size:100% 100%;float:none;outline:none}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree button{background-attachment:scroll;background-color:transparent;background-image:none;background-position:0 0;background-repeat:no-repeat;background-size:100% 100%;border:0;border-radius:0;outline:none;position:static}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree img{border:0;display:inline-block;vertical-align:top;border-radius:0;outline:none;position:static}
+#wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-tree  button::-moz-focus-inner{border: 0;}
+      #wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-max-width-none-important{max-width:none!important}
+      #wistia_chrome_23 #wistia_grid_43_wrapper .w-css-reset-button-important{border-radius:0!important;color:#fff!important;}
+    </style></div></div><div id="wistia_grid_43_front"></div><div id="wistia_grid_43_top_inside"><div id="wistia_grid_43_top" style="height: 0px; font-size: 0px; line-height: 0px;"> </div></div><div id="wistia_grid_43_bottom_inside"><div id="wistia_grid_43_bottom" style="height: 0px; font-size: 0px; line-height: 0px;"> </div></div><div id="wistia_grid_43_left_inside"><div id="wistia_grid_43_left" style="height: 0px; font-size: 0px; line-height: 0px;"> </div></div><div id="wistia_grid_43_right_inside"><div id="wistia_grid_43_right" style="height: 0px; font-size: 0px; line-height: 0px;"> </div></div></div><div id="wistia_grid_43_below" style="height: 0px; font-size: 0px; line-height: 0px;"> </div><style id="wistia_44_style" type="text/css" class="wistia_injected_style">#wistia_grid_43_wrapper{-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box;font-family:Arial,sans-serif;font-size:14px;height:100%;position:relative;text-align:left;width:100%;}
+#wistia_grid_43_wrapper *{-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box;}
+#wistia_grid_43_above{position:relative;}
+#wistia_grid_43_main{display:block;height:100%;position:relative;}
+#wistia_grid_43_behind{height:100%;left:0;position:absolute;top:0;width:100%;}
+#wistia_grid_43_center{height:100%;overflow:hidden;position:relative;width:100%;}
+#wistia_grid_43_front{display:none;height:100%;left:0;position:absolute;top:0;width:100%;}
+#wistia_grid_43_top_inside{position:absolute;left:0;top:0;width:100%;}
+#wistia_grid_43_top{width:100%;position:absolute;bottom:0;left:0;}
+#wistia_grid_43_bottom_inside{position:absolute;left:0;bottom:0;width:100%;}
+#wistia_grid_43_bottom{width:100%;position:absolute;top:0;left:0;}
+#wistia_grid_43_left_inside{height:100%;position:absolute;left:0;top:0;}
+#wistia_grid_43_left{height:100%;position:absolute;right:0;top:0;}
+#wistia_grid_43_right_inside{height:100%;right:0;position:absolute;top:0;}
+#wistia_grid_43_right{height:100%;left:0;position:absolute;top:0;}
+#wistia_grid_43_below{position:relative;}</style></div></div></div></div></div>
+<p></p>
+<h2 id="resources">Resources</h2>
+<ul><li><a href="https://replit.com/@mlqai/CSV-Assistant-LangChain?ref=mlq.ai#main.py">Replit-hosted code</a></li><li><a href="https://python.langchain.com/docs/integrations/toolkits/csv?ref=mlq.ai">LangChain CSV agent documentation</a></li><li><a href="https://platform.openai.com/docs/guides/gpt/function-calling?ref=mlq.ai">OpenAI function calling documentation</a></li></ul>
+<hr>
+<h2 id="to-do">To do</h2>
+<ul><li>Fork the Replit-hosted code</li><li>Add your OpenAI API key to Replit's Secret Manager</li><li>Run <code>pip install langchain</code> in a Replit Shell</li><li>Run the code in Shell with <code>streamlit run main.py</code></li></ul>
+<hr>
+<h2 id="video-transcript">Video Transcript</h2>
+<p>Alright.&nbsp;In&nbsp;this&nbsp;video,&nbsp;we're&nbsp;gonna&nbsp;walk&nbsp;through&nbsp;building&nbsp;a&nbsp;CSV&nbsp;Assistant&nbsp;using&nbsp;Langchain&nbsp;and&nbsp;OpenAI.&nbsp;So&nbsp;this&nbsp;is&nbsp;gonna&nbsp;allow&nbsp;you&nbsp;to&nbsp;chat&nbsp;with&nbsp;CSVs&nbsp;and&nbsp;visualize&nbsp;the&nbsp;data&nbsp;using&nbsp;natural&nbsp;language.&nbsp;So&nbsp;here&nbsp;I'll&nbsp;go&nbsp;and&nbsp;upload&nbsp;this&nbsp;Titanic&nbsp;CSV,&nbsp;and&nbsp;then&nbsp;I&nbsp;can&nbsp;go&nbsp;and&nbsp;ask&nbsp;questions&nbsp;about&nbsp;it.</p>
+<p>How&nbsp;many&nbsp;rows&nbsp;are&nbsp;there?&nbsp;For&nbsp;example,&nbsp;And&nbsp;here&nbsp;in&nbsp;the&nbsp;terminal,&nbsp;we&nbsp;can&nbsp;see&nbsp;that&nbsp;we're&nbsp;using&nbsp;Langchain&nbsp;CSV&nbsp;agent,&nbsp;which&nbsp;works&nbsp;by&nbsp;calling&nbsp;the&nbsp;PANDIS&nbsp;dataframe&nbsp;agent&nbsp;under&nbsp;the&nbsp;hood.&nbsp;In&nbsp;turn,&nbsp;it's&nbsp;gonna&nbsp;call&nbsp;the&nbsp;Python&nbsp;agent&nbsp;and&nbsp;execute&nbsp;this&nbsp;LLM&nbsp;generated&nbsp;Python&nbsp;code.&nbsp;So&nbsp;you&nbsp;can&nbsp;see&nbsp;to&nbsp;get&nbsp;the&nbsp;answer&nbsp;here,&nbsp;assist&nbsp;you&nbsp;in&nbsp;DF.</p>
+<p>And&nbsp;next&nbsp;let's&nbsp;go&nbsp;and&nbsp;visualize&nbsp;our&nbsp;data.&nbsp;So&nbsp;I'll&nbsp;say&nbsp;show&nbsp;me&nbsp;a&nbsp;chart&nbsp;of&nbsp;males&nbsp;versus&nbsp;females.</p>
+<p>And&nbsp;here&nbsp;we&nbsp;can&nbsp;see&nbsp;we&nbsp;get&nbsp;the&nbsp;distribution.&nbsp;So&nbsp;again,&nbsp;under&nbsp;the&nbsp;hood,&nbsp;we're&nbsp;going&nbsp;in&nbsp;writing&nbsp;Python&nbsp;code&nbsp;here&nbsp;to&nbsp;visualize&nbsp;this.&nbsp;We're&nbsp;extracting&nbsp;the&nbsp;Python,&nbsp;and&nbsp;then&nbsp;we're&nbsp;playing&nbsp;this&nbsp;on&nbsp;the&nbsp;front&nbsp;end.</p>
+<p>Alright.&nbsp;Now&nbsp;that&nbsp;we&nbsp;know&nbsp;what&nbsp;we're&nbsp;building,&nbsp;let's&nbsp;jump&nbsp;in&nbsp;the&nbsp;code.&nbsp;So&nbsp;the&nbsp;first&nbsp;step&nbsp;is&nbsp;to&nbsp;PIV&nbsp;install&nbsp;LANG&nbsp;Chain&nbsp;open&nbsp;AI&nbsp;streamlet&nbsp;tabulate&nbsp;and&nbsp;map&nbsp;hot&nbsp;lib.&nbsp;Next,&nbsp;we'll&nbsp;go&nbsp;and&nbsp;import&nbsp;these&nbsp;packages&nbsp;into&nbsp;our&nbsp;CSV&nbsp;agent&nbsp;dot&nbsp;pie.</p>
+<p>And&nbsp;after&nbsp;that,&nbsp;we'll&nbsp;just&nbsp;go&nbsp;and&nbsp;set&nbsp;open&nbsp;ai&nbsp;key&nbsp;here.&nbsp;So&nbsp;here,&nbsp;you&nbsp;can&nbsp;either&nbsp;store&nbsp;this&nbsp;in&nbsp;your&nbsp;API&nbsp;key&nbsp;dot&nbsp;pie,&nbsp;or&nbsp;you&nbsp;can&nbsp;store&nbsp;this&nbsp;in&nbsp;your&nbsp;repllet&nbsp;secret&nbsp;manager&nbsp;if&nbsp;you're&nbsp;using&nbsp;repllet&nbsp;Another&nbsp;we&nbsp;set&nbsp;our&nbsp;open&nbsp;AI&nbsp;key,&nbsp;let's&nbsp;go&nbsp;and&nbsp;create&nbsp;our&nbsp;first&nbsp;function,&nbsp;which&nbsp;is&nbsp;gonna&nbsp;run&nbsp;the&nbsp;CSV&nbsp;agent&nbsp;with&nbsp;a&nbsp;given&nbsp;file&nbsp;path&nbsp;and&nbsp;the&nbsp;user&nbsp;message.&nbsp;So&nbsp;here&nbsp;we&nbsp;can&nbsp;see&nbsp;this&nbsp;takes&nbsp;in&nbsp;two&nbsp;parameters,&nbsp;the&nbsp;file&nbsp;path&nbsp;for&nbsp;the&nbsp;CSV&nbsp;file&nbsp;and&nbsp;the&nbsp;user&nbsp;message&nbsp;for&nbsp;the&nbsp;query.&nbsp;Next,&nbsp;we're&nbsp;going&nbsp;to&nbsp;initialize&nbsp;our&nbsp;agent&nbsp;with&nbsp;the&nbsp;create&nbsp;CSV&nbsp;agent&nbsp;function.</p>
+<p>And&nbsp;for&nbsp;our&nbsp;LLM,&nbsp;we're&nbsp;gonna&nbsp;use&nbsp;the&nbsp;chat&nbsp;OpenAI&nbsp;models,&nbsp;which&nbsp;are&nbsp;the&nbsp;GPT&nbsp;three&nbsp;point&nbsp;five&nbsp;turbo&nbsp;and&nbsp;GPT&nbsp;four&nbsp;model.&nbsp;We'll&nbsp;set&nbsp;the&nbsp;temperature&nbsp;to&nbsp;zero,&nbsp;and&nbsp;then&nbsp;we're&nbsp;gonna&nbsp;set&nbsp;our&nbsp;OpenAI&nbsp;key&nbsp;here.&nbsp;Next,&nbsp;we'll&nbsp;point&nbsp;the&nbsp;agent&nbsp;to&nbsp;our&nbsp;file&nbsp;path,&nbsp;and&nbsp;then&nbsp;we'll&nbsp;set&nbsp;verbose&nbsp;to&nbsp;be&nbsp;true&nbsp;so&nbsp;we&nbsp;can&nbsp;check&nbsp;everything&nbsp;out&nbsp;in&nbsp;the&nbsp;terminal.&nbsp;And&nbsp;for&nbsp;the&nbsp;agent&nbsp;type,&nbsp;we're&nbsp;gonna&nbsp;set&nbsp;this&nbsp;to&nbsp;open&nbsp;AI&nbsp;functions,&nbsp;which&nbsp;is&nbsp;going&nbsp;to&nbsp;use&nbsp;the&nbsp;model&nbsp;that's&nbsp;fine&nbsp;tuned&nbsp;for&nbsp;function&nbsp;calling.</p>
+<p>So&nbsp;this&nbsp;is&nbsp;gonna&nbsp;be&nbsp;the&nbsp;o&nbsp;six&nbsp;one&nbsp;three&nbsp;model,&nbsp;which&nbsp;is&nbsp;fine&nbsp;tuned&nbsp;to&nbsp;call&nbsp;So&nbsp;in&nbsp;case&nbsp;you're&nbsp;unfamiliar&nbsp;with&nbsp;OpenAI&nbsp;function&nbsp;calling,&nbsp;it&nbsp;allows&nbsp;you&nbsp;to&nbsp;use&nbsp;this&nbsp;o&nbsp;six&nbsp;one&nbsp;three&nbsp;model,&nbsp;and&nbsp;it's&nbsp;gonna&nbsp;choose&nbsp;which&nbsp;tool&nbsp;to&nbsp;use&nbsp;based&nbsp;on&nbsp;the&nbsp;user's&nbsp;message.&nbsp;After&nbsp;we&nbsp;set&nbsp;the&nbsp;tools&nbsp;that&nbsp;the&nbsp;agent&nbsp;has&nbsp;access&nbsp;to,&nbsp;we're&nbsp;gonna&nbsp;run&nbsp;this&nbsp;agent&nbsp;with&nbsp;those&nbsp;tool&nbsp;inputs&nbsp;and&nbsp;save&nbsp;the&nbsp;response&nbsp;here.&nbsp;Alright.&nbsp;Next&nbsp;step,&nbsp;we're&nbsp;gonna&nbsp;go&nbsp;and&nbsp;create&nbsp;this&nbsp;function&nbsp;that's&nbsp;going&nbsp;to&nbsp;allow&nbsp;us&nbsp;to&nbsp;render&nbsp;the&nbsp;agent's&nbsp;JSON&nbsp;response&nbsp;in&nbsp;streamline.</p>
+<p>So&nbsp;this&nbsp;function&nbsp;is&nbsp;designed&nbsp;to&nbsp;take&nbsp;in&nbsp;a&nbsp;JSON&nbsp;response&nbsp;from&nbsp;our&nbsp;CSV&nbsp;agent&nbsp;and&nbsp;then&nbsp;render&nbsp;the&nbsp;appropriate&nbsp;content&nbsp;using&nbsp;streamlet.&nbsp;So&nbsp;this&nbsp;function&nbsp;takes&nbsp;in&nbsp;a&nbsp;single&nbsp;parameter,&nbsp;which&nbsp;is&nbsp;the&nbsp;JSON&nbsp;response&nbsp;from&nbsp;the&nbsp;agent.&nbsp;Next,&nbsp;we're&nbsp;gonna&nbsp;check&nbsp;if&nbsp;the&nbsp;response&nbsp;has&nbsp;plain&nbsp;text.&nbsp;So&nbsp;if&nbsp;it&nbsp;contains&nbsp;the&nbsp;answer&nbsp;key,&nbsp;this&nbsp;indicates&nbsp;that&nbsp;it's&nbsp;a&nbsp;textual&nbsp;answer.&nbsp;So&nbsp;we&nbsp;can&nbsp;just&nbsp;display&nbsp;this&nbsp;with&nbsp;s&nbsp;t&nbsp;dot&nbsp;right.</p>
+<p>After&nbsp;that,&nbsp;we'll&nbsp;check&nbsp;if&nbsp;the&nbsp;response&nbsp;has&nbsp;a&nbsp;bar&nbsp;chart.&nbsp;So&nbsp;we'll&nbsp;check&nbsp;if&nbsp;the&nbsp;bar&nbsp;key&nbsp;is&nbsp;in&nbsp;the&nbsp;JSON&nbsp;response.&nbsp;We're&nbsp;then&nbsp;gonna&nbsp;transform&nbsp;this&nbsp;to&nbsp;a&nbsp;panel's&nbsp;data&nbsp;frame&nbsp;and&nbsp;then&nbsp;we're&nbsp;gonna&nbsp;display&nbsp;it&nbsp;using&nbsp;the&nbsp;s&nbsp;t&nbsp;dot&nbsp;bar&nbsp;chart&nbsp;with&nbsp;our&nbsp;data&nbsp;frame.&nbsp;And&nbsp;lastly,&nbsp;we'll&nbsp;just&nbsp;do&nbsp;the&nbsp;same&nbsp;thing&nbsp;and&nbsp;check&nbsp;if&nbsp;the&nbsp;answer&nbsp;has&nbsp;a&nbsp;table&nbsp;key&nbsp;in&nbsp;there,&nbsp;and&nbsp;then&nbsp;we'll&nbsp;just&nbsp;use&nbsp;dot&nbsp;table&nbsp;to&nbsp;display&nbsp;the&nbsp;data&nbsp;frame.&nbsp;And&nbsp;of&nbsp;course,&nbsp;we&nbsp;can&nbsp;extend&nbsp;this&nbsp;function&nbsp;to&nbsp;handle&nbsp;more&nbsp;data&nbsp;visualization&nbsp;types,&nbsp;but&nbsp;for&nbsp;now,&nbsp;this&nbsp;will&nbsp;get&nbsp;us&nbsp;started.</p>
+<p>Alright.&nbsp;Next&nbsp;step,&nbsp;let's&nbsp;create&nbsp;a&nbsp;function&nbsp;called&nbsp;extract&nbsp;code&nbsp;from&nbsp;response.&nbsp;So&nbsp;this&nbsp;is&nbsp;gonna&nbsp;extract&nbsp;our&nbsp;Python&nbsp;code&nbsp;from&nbsp;the&nbsp;string&nbsp;response.</p>
+<p>So&nbsp;our&nbsp;agent's&nbsp;response&nbsp;is&nbsp;gonna&nbsp;include&nbsp;both&nbsp;end&nbsp;code,&nbsp;and&nbsp;we&nbsp;just&nbsp;wanna&nbsp;be&nbsp;able&nbsp;to&nbsp;extract&nbsp;the&nbsp;codes&nbsp;that&nbsp;we&nbsp;can&nbsp;use&nbsp;it&nbsp;for&nbsp;a&nbsp;data&nbsp;visualization.</p>
+<p>So&nbsp;you're&nbsp;gonna&nbsp;use&nbsp;a&nbsp;regular&nbsp;expression&nbsp;to&nbsp;match&nbsp;our&nbsp;code&nbsp;with&nbsp;the&nbsp;triple&nbsp;backticks.&nbsp;That&nbsp;just&nbsp;indicates&nbsp;that&nbsp;it's&nbsp;writing&nbsp;in&nbsp;Python.&nbsp;So&nbsp;here,&nbsp;we'll&nbsp;just&nbsp;search&nbsp;for&nbsp;this&nbsp;and&nbsp;get&nbsp;matches.&nbsp;Then&nbsp;if&nbsp;a&nbsp;match&nbsp;is&nbsp;found,&nbsp;we're&nbsp;gonna&nbsp;extract&nbsp;the&nbsp;Python&nbsp;code&nbsp;and&nbsp;we'll&nbsp;just&nbsp;get&nbsp;rid&nbsp;of&nbsp;any&nbsp;leading&nbsp;or&nbsp;trailing&nbsp;white&nbsp;spaces&nbsp;to&nbsp;ensure&nbsp;we&nbsp;can&nbsp;actually&nbsp;execute&nbsp;this&nbsp;code.&nbsp;Last&nbsp;step,&nbsp;let's&nbsp;create&nbsp;our&nbsp;main&nbsp;streamlet&nbsp;application,&nbsp;which&nbsp;is&nbsp;gonna&nbsp;put&nbsp;everything&nbsp;together.&nbsp;So&nbsp;here,&nbsp;we'll&nbsp;just&nbsp;set&nbsp;our&nbsp;title&nbsp;and&nbsp;our&nbsp;description.</p>
+<p>And&nbsp;then&nbsp;we&nbsp;use&nbsp;the&nbsp;dot&nbsp;file&nbsp;uploader&nbsp;to&nbsp;upload&nbsp;our&nbsp;CSV&nbsp;file&nbsp;and&nbsp;store&nbsp;this&nbsp;in&nbsp;uploaded&nbsp;file.&nbsp;And&nbsp;if&nbsp;the&nbsp;file&nbsp;is&nbsp;successfully&nbsp;uploaded,&nbsp;we're&nbsp;just&nbsp;gonna&nbsp;extract&nbsp;the&nbsp;metadata&nbsp;and&nbsp;display&nbsp;the&nbsp;file&nbsp;tails&nbsp;here.&nbsp;And&nbsp;then&nbsp;we're&nbsp;also&nbsp;gonna&nbsp;save&nbsp;the&nbsp;uploaded&nbsp;file&nbsp;to&nbsp;disc,&nbsp;so&nbsp;we'll&nbsp;save&nbsp;it&nbsp;in&nbsp;a&nbsp;temporary&nbsp;location&nbsp;with&nbsp;this&nbsp;forward&nbsp;slash&nbsp;t&nbsp;m&nbsp;p&nbsp;here.&nbsp;And&nbsp;we're&nbsp;also&nbsp;gonna&nbsp;load&nbsp;this&nbsp;CSV&nbsp;into&nbsp;a&nbsp;panel's&nbsp;data&nbsp;frame&nbsp;so&nbsp;that&nbsp;we&nbsp;can&nbsp;display&nbsp;it&nbsp;using&nbsp;s&nbsp;t&nbsp;dot&nbsp;data&nbsp;frame.&nbsp;And&nbsp;then&nbsp;after&nbsp;the&nbsp;file&nbsp;preview,&nbsp;we'll&nbsp;use&nbsp;this&nbsp;s&nbsp;t&nbsp;dot&nbsp;text&nbsp;input&nbsp;to&nbsp;allow&nbsp;you&nbsp;to&nbsp;input&nbsp;that&nbsp;query.</p>
+<p>And&nbsp;then&nbsp;if&nbsp;the&nbsp;run&nbsp;button&nbsp;is&nbsp;clicked,&nbsp;we're&nbsp;gonna&nbsp;use&nbsp;our&nbsp;CSV&nbsp;agent&nbsp;function,&nbsp;and&nbsp;we're&nbsp;gonna&nbsp;pass&nbsp;in&nbsp;our&nbsp;file&nbsp;path&nbsp;and&nbsp;the&nbsp;user&nbsp;input.</p>
+<p>After&nbsp;that,&nbsp;we'll&nbsp;go&nbsp;and&nbsp;use&nbsp;our&nbsp;extract&nbsp;code&nbsp;from&nbsp;response&nbsp;function&nbsp;to&nbsp;go&nbsp;and&nbsp;check&nbsp;if&nbsp;there's&nbsp;any&nbsp;code&nbsp;that&nbsp;we&nbsp;wanna&nbsp;display&nbsp;on&nbsp;the&nbsp;front&nbsp;end.&nbsp;And&nbsp;if&nbsp;there&nbsp;is&nbsp;code&nbsp;to&nbsp;execute,&nbsp;we're&nbsp;gonna&nbsp;go&nbsp;and&nbsp;attempt&nbsp;to&nbsp;run&nbsp;here.&nbsp;So&nbsp;we'll&nbsp;make&nbsp;the&nbsp;data&nbsp;frame&nbsp;and&nbsp;plotting&nbsp;libraries&nbsp;PLT&nbsp;available&nbsp;to&nbsp;the&nbsp;executing&nbsp;code.&nbsp;And&nbsp;then&nbsp;any&nbsp;generated&nbsp;plot&nbsp;that's&nbsp;captured&nbsp;using&nbsp;this&nbsp;p&nbsp;l&nbsp;t&nbsp;dot&nbsp;g&nbsp;c&nbsp;function&nbsp;is&nbsp;gonna&nbsp;be&nbsp;displayed&nbsp;in&nbsp;streamlet&nbsp;using&nbsp;our&nbsp;s&nbsp;t&nbsp;dot&nbsp;high&nbsp;plot&nbsp;method.</p>
+<p>And&nbsp;down&nbsp;here,&nbsp;if&nbsp;there's&nbsp;no&nbsp;executable&nbsp;code&nbsp;in&nbsp;the&nbsp;response,&nbsp;we're&nbsp;just&nbsp;gonna&nbsp;display&nbsp;it&nbsp;with&nbsp;s&nbsp;t&nbsp;dot&nbsp;right.&nbsp;And&nbsp;that's&nbsp;all&nbsp;we&nbsp;need&nbsp;for&nbsp;our&nbsp;simple&nbsp;app.&nbsp;So&nbsp;let's&nbsp;go&nbsp;and&nbsp;test&nbsp;it&nbsp;out&nbsp;one&nbsp;more&nbsp;time.&nbsp;So&nbsp;let's&nbsp;say&nbsp;visualize&nbsp;the&nbsp;distribution&nbsp;of&nbsp;ages.</p>
+<p>And&nbsp;here&nbsp;we've&nbsp;got&nbsp;our&nbsp;distribution&nbsp;of&nbsp;ages.&nbsp;So&nbsp;this&nbsp;looks&nbsp;to&nbsp;be&nbsp;working&nbsp;well.&nbsp;And&nbsp;that's&nbsp;up&nbsp;to&nbsp;this&nbsp;video.&nbsp;I&nbsp;just&nbsp;wanna&nbsp;show&nbsp;you&nbsp;how&nbsp;you&nbsp;can&nbsp;use&nbsp;line&nbsp;chain&nbsp;and&nbsp;streamlet&nbsp;to&nbsp;create&nbsp;a&nbsp;simple&nbsp;app&nbsp;that&nbsp;allows&nbsp;you&nbsp;to&nbsp;query&nbsp;CSVs&nbsp;visualize&nbsp;the&nbsp;data&nbsp;using&nbsp;natural&nbsp;language.</p>
+          </div>
+        
+          <div class="f-article__tags">
+            <ul class="f-article__tags__list">
+              <li>
+                <span class="f-article__tags__title">Tags:</span>
+              </li>
+                <li>
+                  <a href="https://www.mlq.ai/tag/mlq-academy/" class="f-article-secondary-tag tag-63fdfdfcb33dd9003d2a6445 mlq-academy">
+                    MLQ Academy
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.mlq.ai/tag/langchain/" class="f-article-secondary-tag tag-6405ef53757a29003d89575d langchain">
+                    LangChain
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.mlq.ai/tag/openai/" class="f-article-secondary-tag tag-63aee9c2ce716f003daa0942 openai">
+                    OpenAI
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.mlq.ai/tag/gpt-3/" class="f-article-secondary-tag tag-63a188c746d688003d611326 gpt-3">
+                    GPT-3
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.mlq.ai/tag/gpt-4/" class="f-article-secondary-tag tag-6411b812337fb1003d684a9b gpt-4">
+                    GPT-4
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.mlq.ai/tag/large-language-models/" class="f-article-secondary-tag tag-639365773d237c004d77d8a2 large-language-models">
+                    Large Language Models
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.mlq.ai/tag/generative-ai/" class="f-article-secondary-tag tag-636d5951e6d792003ddd8d32 generative-ai">
+                    Generative AI
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.mlq.ai/tag/machine-learning/" class="f-article-secondary-tag tag-5d17cf54ea6ffa0038c597d7 machine-learning">
+                    Machine Learning
+                  </a>
+                </li>
+            </ul>
+          </div>
+        
+<section class="f-article-share " x-data="share()">
+  <h2 class="f-article-section-title centered">
+    Spread the word
+  </h2>
+  <ul class="f-article-share__list">
+    <li>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.mlq.ai/csv-assistant-langchain-mlq-academy/" class="f-article-share__button" target="_blank" rel="noopener" aria-label="Share on Facebook">
+        <span class="icon-facebook f-article-share__button__icon facebook" aria-hidden="true"></span>
+        <span class="f-article-share__button__label">
+          Share
+        </span>
+      </a>
+    </li>
+    <li>
+      <a href="https://twitter.com/intent/tweet?text=Building%20a%20CSV%20Assistant%20with%20LangChain%3A%20MLQ%20Academy&amp;url=https://www.mlq.ai/csv-assistant-langchain-mlq-academy/" class="f-article-share__button" target="_blank" rel="noopener" aria-label="Tweet">
+        <span class="icon-twitter f-article-share__button__icon twitter" aria-hidden="true"></span>
+        <span class="f-article-share__button__label">
+          Tweet
+        </span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.mlq.ai/csv-assistant-langchain-mlq-academy/" class="f-article-share__button" target="_blank" rel="noopener" aria-label="Share on Linkedin">
+        <span class="icon-linkedin f-article-share__button__icon linkedin" aria-hidden="true"></span>
+        <span class="f-article-share__button__label">
+          Share
+        </span>
+      </a>
+    </li>
+    <li>
+      <button class="f-article-share__button" aria-label="Copy link" @click="copyLink">
+        <span x-show.transition.in="!linkCopied" class="icon-link f-article-share__button__icon generic" aria-hidden="true"></span>
+        <span x-show.transition.in="linkCopied" class="icon-circle-check f-article-share__button__icon generic" aria-hidden="true" style="display: none;"></span>
+        <span class="f-article-share__button__label">
+          Copy
+        </span>
+      </button>
+    </li>
+    <li>
+      <a href="mailto:?body=https://www.mlq.ai/csv-assistant-langchain-mlq-academy/&amp;subject=Building a CSV Assistant with LangChain: MLQ Academy" class="f-article-share__button" target="_blank" rel="noopener" aria-label="Send article by email">
+        <span class="icon-mail f-article-share__button__icon generic" aria-hidden="true"></span>
+        <span class="f-article-share__button__label">
+          Email
+        </span>
+      </a>
+    </li>
+  </ul>
+  <input x-ref="copy_input" type="text" value="https://www.mlq.ai/csv-assistant-langchain-mlq-academy/" class="no-appearance invisible sr-only" aria-hidden="true" tabindex="-1">
+</section>
+
+<script>
+  window.share = () => {
+    return {
+      linkCopied: false,
+      copyLink() {
+        const self = this
+        const inputLink = self.$refs.copy_input
+        inputLink.select()
+        inputLink.setSelectionRange(0, 99999)
+        document.execCommand('copy')
+        inputLink.blur()
+        self.linkCopied = true
+
+        setTimeout(() => {
+          self.linkCopied = false
+        }, 3000)
+      }
+    }
+  }
+</script>
+        
+
+        <section class="f-article__nav-articles ">
+            
+<article class="f-nav-article next post-access-public ">
+  <a href="https://www.mlq.ai/nvidia-reports-blowout-quarter-twai/" class="f-nav-article__link">
+    <span class="f-access-tag border in-nav-article public">
+      public
+    </span>
+      <div class="f-nav-article__image">
+        <img data-src="/content/images/size/w350/2023/08/This-Week-in-AI--2--1.png" alt="" class="lazy" width="175" height="240">
+      </div>
+    <div class="f-nav-article__content">
+      <div>
+        <span class="f-nav-article__label smaller">
+          Next article
+        </span>
+        <h2 class="f-nav-article__title">NVIDIA Reports Blowout Quarter - This Week in AI</h2>
+      </div>
+    </div>
+  </a>
+</article>
+            
+<article class="f-nav-article prev post-access-public ">
+  <a href="https://www.mlq.ai/nvidia-q2-2024-earnings-call-summary/" class="f-nav-article__link">
+    <span class="f-access-tag border in-nav-article public">
+      public
+    </span>
+      <div class="f-nav-article__image">
+        <img data-src="/content/images/size/w350/2023/08/Nvidia-Q2-2024-earnings.png" alt="" class="lazy" width="175" height="240">
+      </div>
+    <div class="f-nav-article__content">
+      <div>
+        <span class="f-nav-article__label smaller">
+          Previous article
+        </span>
+        <h2 class="f-nav-article__title">Nvidia Hits All Time: Q2 2024 Earnings Call Summary</h2>
+      </div>
+    </div>
+  </a>
+</article>
+        </section>
+              <section class="f-article__related-articles">
+                <h2 class="f-article-section-title centered">
+                  Keep reading
+                </h2>
+                <div class="f-article__related-articles__wrapper">
+                    
+<article class="f-related-article post post-access-paid  index-0 ">
+  <span class="f-access-tag in-related-article  paid">
+    Premium
+  </span>
+    <a href="https://www.mlq.ai/gpt-3-5-fine-tuning-structured-output-mlq-academy/" class="f-related-article__image" aria-hidden="true" tabindex="-1">
+      <img data-src="/content/images/size/w750/2023/09/GPT-3.5-Fine-Tuning-1.png" alt="" class="lazy" width="335" height="200">
+    </a>
+  <div class="f-related-article__content">
+    <div>
+      <a href="https://www.mlq.ai/gpt-3-5-fine-tuning-structured-output-mlq-academy/" class="f-related-article__title">
+        <h3>GPT 3.5 Fine Tuning for Structured Output: MLQ Academy</h3>
+      </a>
+    </div>
+    <div>
+      <div class="f-related-article__timestamp">
+        <span class="f-related-article__timestamp__date">
+          a month ago
+        </span>
+          <span class="f-related-article__timestamp__divider">&nbsp; • &nbsp;</span>
+          <span class="f-related-article__timestamp__read">
+            8 min read
+          </span>
+      </div>
+    </div>
+  </div>
+</article>
+                    
+<article class="f-related-article post post-access-paid  index-1 ">
+  <span class="f-access-tag in-related-article  paid">
+    Premium
+  </span>
+    <a href="https://www.mlq.ai/gpt-fine-tuning-for-brand-tone-mlq-academy/" class="f-related-article__image" aria-hidden="true" tabindex="-1">
+      <img data-src="/content/images/size/w750/2023/09/GPT-3.5-Fine-Tuning-Brand-Tone-of-Voice--1-.png" alt="" class="lazy" width="335" height="200">
+    </a>
+  <div class="f-related-article__content">
+    <div>
+      <a href="https://www.mlq.ai/gpt-fine-tuning-for-brand-tone-mlq-academy/" class="f-related-article__title">
+        <h3>GPT 3.5 Fine Tuning for Brand Tone of Voice: MLQ Academy</h3>
+      </a>
+    </div>
+    <div>
+      <div class="f-related-article__timestamp">
+        <span class="f-related-article__timestamp__date">
+          a month ago
+        </span>
+          <span class="f-related-article__timestamp__divider">&nbsp; • &nbsp;</span>
+          <span class="f-related-article__timestamp__read">
+            10 min read
+          </span>
+      </div>
+    </div>
+  </div>
+</article>
+                    
+<article class="f-related-article post post-access-paid  index-2 last">
+  <span class="f-access-tag in-related-article  paid">
+    Premium
+  </span>
+    <a href="https://www.mlq.ai/gpt-3-5-fine-tuning-getting-started-mlq-academy/" class="f-related-article__image" aria-hidden="true" tabindex="-1">
+      <img data-src="/content/images/size/w750/2023/08/Getting-Started-with--GPT-3.5-Fine-Tuning.png" alt="" class="lazy" width="335" height="200">
+    </a>
+  <div class="f-related-article__content">
+    <div>
+      <a href="https://www.mlq.ai/gpt-3-5-fine-tuning-getting-started-mlq-academy/" class="f-related-article__title">
+        <h3>Getting Started with GPT 3.5 Fine Tuning: MLQ Academy</h3>
+      </a>
+    </div>
+    <div>
+      <div class="f-related-article__timestamp">
+        <span class="f-related-article__timestamp__date">
+          a month ago
+        </span>
+          <span class="f-related-article__timestamp__divider">&nbsp; • &nbsp;</span>
+          <span class="f-related-article__timestamp__read">
+            5 min read
+          </span>
+      </div>
+    </div>
+  </div>
+</article>
+                </div>
+              </section>
+      </div>
+    
+<div class="f-blob-shape " aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" width="273" height="296" viewBox="0 0 273 296" aria-hidden="true">
+      <defs>
+        <filter id="wave-a">
+          <feColorMatrix in="SourceGraphic" values="0 0 0 0 0.258824 0 0 0 0 0.329412 0 0 0 0 0.400000 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+      </defs>
+      <g fill="none" fill-rule="evenodd" filter="url(#wave-a)" transform="translate(-127 -52)">
+        <path fill-rule="nonzero" class="shape-fill" d="M272.994862,184.279347 C273.248337,203.758301 264.123248,217.165892 245.619596,224.502122 C227.115943,231.838351 211.273775,244.739995 198.093091,263.207055 C184.912408,281.674115 166.408755,292.298999 142.582135,295.081706 C118.755514,297.864414 94.2952064,294.322786 69.2012122,284.456823 C44.107218,274.590859 24.0827176,257.768127 9.12771095,233.988625 C-5.82729569,210.209123 -2.40538739,186.682595 19.3934358,163.40904 C41.1922591,140.135485 48.0360757,113.193816 39.9248856,82.5840314 C31.8136956,51.9742472 39.5446736,28.7006923 63.1178197,12.7633667 C86.6909657,-3.17395892 111.531485,-4.18585261 137.639378,9.72768564 C163.747271,23.6412239 186.68673,33.3807007 206.457756,38.946116 C226.228782,44.5115313 240.550102,56.4012821 249.421716,74.6153686 C258.29333,92.829455 264.376723,110.790568 267.671894,128.498708 C270.967064,146.206847 272.741387,164.800394 272.994862,184.279347 Z" transform="translate(127 52)"></path>
+      </g>
+    </svg>
+</div>
+  </main>
+    <section class="f-newsletter" aria-label="Newsletter form">
+      <div class="f-newsletter__wrapper">
+        
+<form data-members-form="subscribe" id="newsletter-form" class="f-auth-form no-image">
+    <h3 class="f-auth-form__title">
+      Subscribe to our newsletter
+    </h3>
+  <p class="f-auth-form__subtitle">
+    Stay updated with MLQ.ai by signing up for our newsletter.
+  </p>
+  <div class="f-auth-form__fieldset no-image">
+    <label for="newsletter-input" class="sr-only">
+      Your email address
+    </label>
+    <input data-members-email="" id="newsletter-input" class="f-auth-form__input no-appearance" type="email" required="" placeholder="Your email address">
+    <button id="newsletter-button" class="f-button primary medium in-auth-form" type="submit">
+      Join now
+      <span class="icon-chevron-right" aria-hidden="true"></span>
+    </button>
+  </div>
+  <p class="f-auth-form__success">
+    🎉 Awesome! Now check your inbox and click the link to confirm your subscription.
+  </p>
+  <p class="f-auth-form__invalid f-error-message bottom-space">
+    Please enter a valid email address
+  </p>
+  <p class="f-auth-form__error f-error-message bottom-space">
+    Oops! There was an error sending the email, please try later
+  </p>
+</form>
+      </div>
+    </section>
+</div>
+
+
+
+  
+<footer class="f-footer" x-data="footer()" x-init="checkSocialLinks">
+  <div class="f-footer__container">
+    <div class="f-footer__divider">
+      <svg xmlns="http://www.w3.org/2000/svg" width="375" height="21" viewBox="0 0 375 21" preserveAspectRatio="none" aria-hidden="true">
+        <g transform="matrix(1 0 0 -1 0 21)">
+          <path d="M0,0 L0,9.1577781 C14.934375,13.5497132 32.371875,15.5221272 49.375,14.6971556 C71.3625,13.6347822 91.978125,8.10727471 114,7.27834643 C137.075,6.41578621 160.10625,10.6177997 182.1875,14.2540054 C203.834375,17.8150339 225.40625,19.1761381 247.625,16.8416861 C258.921875,15.6546766 269.453125,13.3123113 280.265625,11.0372098 C309.215625,4.94587281 347.8125,-2.8270609 375,10.3803979 L375,0 L0,0 Z" opacity=".199" class="shape-fill"></path>
+          <path d="M0,0 L0,3.01856876 C4.0625,7.04905493 8.6375,10.8561556 14.903125,13.7563491 C31.065625,21.244538 51.5625,21.1929875 70.18125,17.4851693 C79.915625,15.547252 88.959375,12.5076812 98.203125,9.88624227 C110.990625,6.25861378 124.68125,1.10356277 139.0875,0.40285769 C150.41875,-0.141286583 161.24375,2.20139771 169.9,6.42853954 C179.828125,11.2761968 189.375,18.2660641 202.284375,20.36627 C214.921875,22.4263812 227.70625,19.088963 239.5125,15.7305427 C251.31875,12.3721224 263,8.2843579 276.05,7.51110025 C294.715625,6.39417253 311.45,11.8795287 328.83125,14.9267366 C338.26875,16.5801715 347.26875,16.1047612 356.046875,13.494778 C363.05625,11.4155741 371.046875,8.35309191 375,4.09349236 L375,0 L0,0 Z" opacity=".297" class="shape-fill"></path>
+          <path d="M0,0 L0,1.11474158 C46.853125,11.6820165 98.153125,14.12138 148.696875,8.42887191 C162.134375,6.91614978 175.01875,4.44510628 188.575,3.18978451 C207.0125,1.48104209 223.725,5.61330793 240.3125,10.1989944 C258.728125,15.2895816 276.875,18.8575467 297.25,17.8200252 C324.290625,16.4340232 351.14375,8.7694324 375,1.02762145 L375,0 L0,0 Z" class="shape-fill"></path>
+        </g>
+      </svg>
+    </div>
+    <div class="f-footer__wrapper">
+      <div class="f-footer__columns-container">
+        <div class="f-footer__logo-container">
+          <div class="f-footer__logo-bg  no-logo ">
+            
+<a href="https://www.mlq.ai/" class="f-logo in-footer  no-logo " title="MLQ.ai">
+    <span>MLQ.ai</span>
+</a>
+          </div>
+        </div>
+        <div class="f-footer__nav-container">
+            <nav class="f-footer-navigation" role="navigation" aria-label="Main links in footer">
+              <span class="f-footer-navigation__title">
+                Main links
+              </span>
+              <ul class="f-footer-navigation__list">
+                
+    <li>
+      <a href="https://app.mlq.ai/" class="nav-mlq-app">
+        <span>MLQ App</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/mlq-academy/" class="nav-mlq-academy">
+        <span>MLQ Academy</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/machine-learning/" class="nav-machine-learning">
+        <span>Machine Learning</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/generative-ai/" class="nav-generative-ai">
+        <span>Generative AI</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/gpt-fine-tuning/" class="nav-gpt-fine-tuning">
+        <span>GPT Fine Tuning</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/prompt-engineering/" class="nav-prompt-engineering">
+        <span>Prompt Engineering</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/quantum-computing/" class="nav-quantum-computing">
+        <span>Quantum Computing</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.mlq.ai/tag/quantitative-finance/" class="nav-quantitative-finance">
+        <span>Quantitative Finance</span>
+      </a>
+    </li>
+
+              </ul>
+            </nav>
+            <nav class="f-footer-navigation" role="navigation" aria-label="Secondary links in footer">
+              <span class="f-footer-navigation__title">
+                Secondary links
+              </span>
+              <ul class="f-footer-navigation__list">
+                
+    <li class="nav-about">
+      <a href="https://www.mlq.ai/about/">
+        <span>About</span>
+      </a>
+    </li>
+    <li class="nav-services">
+      <a href="https://www.mlq.ai/tag/services/">
+        <span>Services</span>
+      </a>
+    </li>
+    <li class="nav-contact">
+      <a href="https://www.mlq.ai/contact/">
+        <span>Contact</span>
+      </a>
+    </li>
+    <li class="nav-disclaimer">
+      <a href="https://www.mlq.ai/disclaimer/">
+        <span>Disclaimer</span>
+      </a>
+    </li>
+    <li class="nav-terms-of-service">
+      <a href="https://www.mlq.ai/terms-of-service/">
+        <span>Terms of Service</span>
+      </a>
+    </li>
+    <li class="nav-privacy-policy">
+      <a href="https://www.mlq.ai/privacy-policy/">
+        <span>Privacy Policy</span>
+      </a>
+    </li>
+    <li class="nav-newsletter">
+      <a href="https://www.mlq.ai/newsletter/">
+        <span>Newsletter</span>
+      </a>
+    </li>
+
+              </ul>
+            </nav>
+          <nav class="f-footer-navigation" role="navigation" aria-label="Social links in footer" x-ref="social_navigation">
+            <span class="f-footer-navigation__title">
+              Social links
+            </span>
+            <ul class="f-footer-navigation__list" x-ref="social_list">
+                <li>
+                  <a href="https://twitter.com/mlqai" class="social">
+                    <span class="icon-twitter" aria-hidden="true"></span>
+                    Twitter
+                  </a>
+                </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div class="f-footer__copyright-container">
+        <p class="f-footer-copyright">
+          © MLQ.ai 2023
+        </p>
+        <p class="f-footer-copyright last">
+            Published with <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  window.footer = () => {
+    return {
+      checkSocialLinks() {
+        if (this.$refs.social_list.children.length === 0) {
+          this.$refs.social_navigation.remove()
+        }
+      }
+    }
+  }
+</script>
+
+  <script src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/manifest.js" defer="defer"></script>
+  <script src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/vendor.js" defer="defer"></script>
+  <script src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/app.js" defer="defer"></script>
+
+    <script defer="defer" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/post.js"></script>
+
+
+  <!-- <script async data-uid="6b310b9133" src="https://mlq.ck.page/6b310b9133/index.js"></script>-->
+
+
+
+
+<div id="ghost-portal-root"><iframe srcdoc="&lt;!DOCTYPE html&gt;" data-testid="portal-trigger-frame" title="portal-trigger" style="z-index: 3999998; position: fixed; bottom: 0px; right: 0px; width: 105px; max-width: 500px; height: 98px; animation: 250ms ease 0s 1 normal none running animation-bhegco; transition: opacity 0.3s ease 0s; overflow: hidden;" frameborder="0" class="gh-portal-triggerbtn-iframe"></iframe></div><div id="sodo-search-root"></div><style id="wistia_22_style" type="text/css" class="wistia_injected_style">
+@font-face {
+font-family: 'WistiaPlayerInterNumbersSemiBold';
+font-feature-settings: 'tnum' 1;
+src: url(data:application/x-font-woff;charset=utf-8;base64,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);
+}
+</style><iframe name="__privateStripeMetricsController1270" frameborder="0" allowtransparency="true" scrolling="no" role="presentation" src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/m-outer-27c67c0d52761104439bb051c7856ab1.html" aria-hidden="true" tabindex="-1" style="border: medium !important; margin: 0px !important; padding: 0px !important; width: 1px !important; min-width: 100% !important; overflow: hidden !important; display: block !important; visibility: hidden !important; position: fixed !important; height: 1px !important; pointer-events: none !important; user-select: none !important;"></iframe><div class="lightense-backdrop"></div><img src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/adsct_002.gif" height="1" width="1" style="display: none;"><img src="Building%20a%20CSV%20Assistant%20with%20LangChain%20MLQ%20Academy_files/adsct.gif" height="1" width="1" style="display: none;"><style id="wistia_90_style" type="text/css" class="wistia_injected_style">
+  @font-face {
+    font-family: 'WistiaPlayerInter';
+    src: url(data:application/x-font-woff;charset=utf-8;base64,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);
+    unicode-range: U+0-3B,U+3F-5A,U+61-7A,U+C1,U+C9,U+D1,U+E1,U+E9,E+F1,U+2014,U+2026,U+2192,U+21BA,U+2713,U+2717;
+  }
+
+  @font-face {
+    font-family: 'WistiaPlayerInter';
+    src:  url(https://fast.wistia.com/assets/external/fonts/Inter-Extended.woff) format('woff2');
+    unicode-range: U+3C-3E,U+5B-60,U+7B-7E,U+A0-C0,U+C2-C8,U+CA-D0,U+D2-E8,U+EA-F0,U+F2-2013,U+2015-2025,U+2026-2191,U+2193-21B9,U+21BB-2712,U+2714-2716,U+2718-10FFFF;
+  }
+
+  /* cyrillic-ext */
+  @font-face {
+    font-family: 'WistiaPlayerInter';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fast.wistia.com/assets/external/fonts/Inter-Cyrillic-Extended.woff) format('woff');
+    unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+  }
+  /* cyrillic */
+  @font-face {
+    font-family: 'WistiaPlayerInter';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fast.wistia.com/assets/external/fonts/Inter-Cyrillic.woff) format('woff');
+    unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  }
+  /* greek-ext */
+  @font-face {
+    font-family: 'WistiaPlayerInter';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fast.wistia.com/assets/external/fonts/Inter-Greek-Extended.woff) format('woff');
+    unicode-range: U+1F00-1FFF;
+  }
+  /* greek */
+  @font-face {
+    font-family: 'WistiaPlayerInter';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fast.wistia.com/assets/external/fonts/Inter-Greek.woff) format('woff');
+    unicode-range: U+0370-03FF;
+  }
+  /* vietnamese */
+  @font-face {
+    font-family: 'WistiaPlayerInter';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fast.wistia.com/assets/external/fonts/Inter-Vietnamese.woff) format('woff');
+    unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+  }
+  /* latin-ext */
+  @font-face {
+    font-family: 'WistiaPlayerInter';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fast.wistia.com/assets/external/fonts/Inter-Latin-Extended.woff) format('woff');
+    unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+</style></body></html>
