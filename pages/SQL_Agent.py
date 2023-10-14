@@ -13,7 +13,7 @@ from langchain.agents import AgentType
 load_dotenv()
 
 # Update the database URI to point to your enhanced_database.db
-db_uri = "sqlite:///E:/DESKTOP/FreeLanceProjects/audio8/dapp/database.db"
+db_uri = "sqlite:///database.db"
 db = SQLDatabase.from_uri(db_uri)
 
 
